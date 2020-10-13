@@ -5,6 +5,7 @@ import asyncpg
 from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.base_dao import BaseDao
+from src.internal.biz.deserializers.place_main import PlaceMainDeserializer, DES_PLACE_MAIN_FROM_DB_FULL
 from src.internal.biz.entities.account_main import AccountMain
 from src.internal.biz.entities.photo import Photo
 from src.internal.biz.entities.place_main import PlaceMain
@@ -60,7 +61,7 @@ class PlaceMainDao(BaseDao):
 
             return AccountMain(id=account_main_id), None
 
-    async def get_all_places(self, city: Optional[str], pagination_size: Optional[int], pagination_after: Optional[int]) -> Tuple[Optional[List[PlaceMain]], Optional[Error]]:
+    async def get_all_places(self, city: Optional[str], pagination_size: int, pagination_after: int) -> Tuple[Optional[List[PlaceMain]], Optional[Error]]:
         async with self.pool.acquire() as conn:
             sql = """
                 SELECT
@@ -85,9 +86,32 @@ class PlaceMainDao(BaseDao):
             inserted_values.append(pagination_after)
 
             rows = await conn.fetch(sql, *inserted_values)
+            if not rows:
+                return [], None
 
-            return [PlaceMain(
-                id=row['id'],
-                name=row['name'],
-                photo=Photo(short_url=row['photo_link'])
-            ) for row in rows], None
+            return [PlaceMainDeserializer.deserialize(row, DES_PLACE_MAIN_FROM_DB_FULL) for row in rows], None
+
+    async def get_places_by_name(self, city_name: Optional[str], place_name: str, pagination_size: int, pagination_after: int) -> Tuple[Optional[List[PlaceMain]], Optional[Error]]:
+        async with self.pool.acquire() as conn:
+            sql = """
+                SELECT
+                    place_main.id,
+                    place_main.name,
+                    place_main.photo_link
+                FROM
+                    place_main
+                    INNER JOIN place_location ON place_main.id = place_location.place_main_id
+                WHERE
+                    position($1 in lower(place_main.name)) <> 0
+            """
+            inserted_values = []
+
+            if city_name:
+                sql += f' AND city = ${len(inserted_values) + 1}'
+                inserted_values.append(city_name)
+
+            rows = await conn.fetch(sql, *inserted_values)
+            if not rows:
+                return [], None
+
+            return [PlaceMainDeserializer.deserialize(row, DES_PLACE_MAIN_FROM_DB_FULL) for row in rows], None

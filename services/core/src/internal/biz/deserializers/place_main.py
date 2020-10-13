@@ -1,10 +1,32 @@
+from typing import Union
+
+from asyncpg import Record
+
+from src.internal.biz.deserializers.account_main import ACCOUNT_MAIN, AccountMainDeserializer, \
+    DES_ACCOUNT_MAIN_FROM_DB_FULL
+from src.internal.biz.deserializers.base_constants import ID, CREATED_AT, EDITED_AT
 from src.internal.biz.deserializers.base_deserializer import BaseDeserializer
+from src.internal.biz.deserializers.currency import CURRENCY, CurrencyDeserializer, DES_CURRENCY_FROM_DB_FULL
+from src.internal.biz.deserializers.language import LanguageDeserializer, DES_LANGUAGE_FROM_DB_FULL, LANGUAGE
+from src.internal.biz.deserializers.photo import PHOTO, PhotoDeserializer, DES_PHOTO_FROM_DB_FULL
+from src.internal.biz.deserializers.utils import filter_keys_by_substr
 from src.internal.biz.entities.currency import Currency
 from src.internal.biz.entities.language import Language
 from src.internal.biz.entities.photo import Photo
 from src.internal.biz.entities.place_main import PlaceMain
 
 DES_PLACE_MAIN_ADD = 'place-main-add'
+DES_PLACE_MAIN_FROM_DB_FULL = 'place-main-from-db-full'
+
+PLACE_MAIN = 'plm_'
+PLACE_MAIN_ID = PLACE_MAIN + ID
+PLACE_MAIN_CREATED_AT = PLACE_MAIN + CREATED_AT
+PLACE_MAIN_EDITED_AT = PLACE_MAIN + EDITED_AT
+PLACE_MAIN_NAME = PLACE_MAIN + 'nm'
+PLACE_MAIN_LOGIN = PLACE_MAIN + 'lg'
+PLACE_MAIN_DESCRIPTION = PLACE_MAIN + 'ds'
+PLACE_MAIN_IS_DRAFT = PLACE_MAIN + 'dr'
+PLACE_MAIN_IS_PUBLISHED = PLACE_MAIN + 'pb'
 
 
 class PlaceMainDeserializer(BaseDeserializer):
@@ -13,6 +35,7 @@ class PlaceMainDeserializer(BaseDeserializer):
     def _get_deserializer(cls, format_ser: str):
         if format_ser == DES_PLACE_MAIN_ADD:
             return cls._deserialize_add
+
         else:
             raise TypeError
 
@@ -27,4 +50,26 @@ class PlaceMainDeserializer(BaseDeserializer):
             main_currency=Currency(id=place_main.get('main_currency_id')),
             is_draft=place_main['extra']['is_draft'],
             is_published=False
+        )
+
+    @staticmethod
+    def _deserialize_from_db_full(place_main: Union[dict, Record]) -> PlaceMain:
+        account_main = filter_keys_by_substr(place_main, ACCOUNT_MAIN)
+        main_language = filter_keys_by_substr(place_main, LANGUAGE)
+        photo = filter_keys_by_substr(place_main, PHOTO)
+        main_currency = filter_keys_by_substr(place_main, CURRENCY)
+
+        return PlaceMain(
+            id=place_main.get(PLACE_MAIN_ID),
+            created_at=place_main.get(PLACE_MAIN_CREATED_AT),
+            edited_at=place_main.get(PLACE_MAIN_EDITED_AT),
+            main_language=LanguageDeserializer.deserialize(main_language, DES_LANGUAGE_FROM_DB_FULL),
+            account_main=AccountMainDeserializer.deserialize(account_main, DES_ACCOUNT_MAIN_FROM_DB_FULL),
+            name=place_main.get(PLACE_MAIN_NAME),
+            login=place_main.get(PLACE_MAIN_LOGIN),
+            photo=PhotoDeserializer.deserialize(photo, DES_PHOTO_FROM_DB_FULL),
+            description=place_main.get(PLACE_MAIN_DESCRIPTION),
+            main_currency=CurrencyDeserializer.deserialize(main_currency, DES_CURRENCY_FROM_DB_FULL),
+            is_draft=place_main.get(PLACE_MAIN_IS_DRAFT),
+            is_published=place_main.get(PLACE_MAIN_IS_PUBLISHED)
         )

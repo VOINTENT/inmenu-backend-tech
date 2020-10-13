@@ -37,7 +37,7 @@ class PlaceCuisineTypeDao(BaseDao):
 
         return None, None
 
-    async def get_by_ids(self, place_main_ids: List[int], lang_id: int) -> Tuple[Optional[List[PlaceCuisineType]], Optional[Error]]:
+    async def get_by_main_ids(self, place_main_ids: List[int], lang_id: int) -> Tuple[Optional[List[PlaceCuisineType]], Optional[Error]]:
         async with self.pool.acquire() as conn:
             sql = """
                 SELECT

@@ -13,7 +13,7 @@ class PlaceMain(AbstractModel):
     def __init__(self, id: Optional[int] = None,
                  created_at: Optional[datetime] = None,
                  edited_at: Optional[datetime] = None,
-                 account_main: Optional[datetime] = None,
+                 account_main: Optional[AccountMain] = None,
                  main_language: Optional[Language] = None,
                  name: Optional[str] = None,
                  login: Optional[str] = None,
@@ -25,7 +25,7 @@ class PlaceMain(AbstractModel):
         super().__init__(id, created_at, edited_at)
         self.__class__._check(main_language=main_language, name=name, login=login, photo=photo,
                               description=description, main_currency=main_currency, is_draft=is_draft,
-                              is_published=is_published)
+                              is_published=is_published, account_main=account_main)
         self.__main_language = main_language
         self.__account_main = account_main
         self.__name = name
@@ -78,6 +78,7 @@ class PlaceMain(AbstractModel):
 
     @staticmethod
     def _check(**kwargs):
+        check_value(kwargs['account_main'], AccountMain)
         check_value(kwargs['main_language'], Language)
         check_value(kwargs['name'], str)
         check_value(kwargs['login'], str)
