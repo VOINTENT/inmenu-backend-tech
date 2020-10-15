@@ -63,3 +63,11 @@ class MenuService(BaseService):
             return None, err
 
         return dish_common, err
+
+    @staticmethod
+    async def get_menu(menu_id: int):
+        menu_common, err = await MenuMainDao().get(menu_id)
+        if err:
+            return None, err
+
+        return menu_common, err
