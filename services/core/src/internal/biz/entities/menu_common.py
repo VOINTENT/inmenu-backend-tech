@@ -7,6 +7,7 @@ from src.internal.biz.entities.language import Language
 from src.internal.biz.entities.menu_main import MenuMain
 from src.internal.biz.entities.currency import Currency
 from src.internal.biz.entities.measure_unit import MeasureUnit
+from src.internal.biz.entities.count_dishes import CountDishes
 
 
 class MenuCommon:
@@ -18,6 +19,7 @@ class MenuCommon:
                  dish_main: Optional[List[DishMain]] = None,
                  dish_measures: Optional[List[DishMeasure]] = None,
                  currency: Optional[Currency] = None,
+                 count_dishes: Optional[List[CountDishes]] = None
                  ) -> None:
         self.__main_menu = main_menu
         self.__dish_main = dish_main
@@ -26,6 +28,7 @@ class MenuCommon:
         self.__language = language
         self.__currency = currency
         self.__measure_unit = measure_unit
+        self.__count_dishes = count_dishes
 
     @property
     def menu(self) -> Optional[MenuMain]:
@@ -54,3 +57,7 @@ class MenuCommon:
     @property
     def measure_unit(self) -> Optional[List[MeasureUnit]]:
         return self.__measure_unit
+
+    @property
+    def count_dishes(self) -> Optional[List[int]]:
+        return self.__count_dishes

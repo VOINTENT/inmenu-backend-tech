@@ -13,6 +13,35 @@ class MenuSerializer(BaseSerializer):
 
     @staticmethod
     def _ser_for_get_menu(menu_common: MenuCommon):
+        print(len(menu_common.menu_category))
+        print(len(menu_common.count_dishes))
+        # data = {'menu_main_id': menu_common.menu.id,
+        #         'menu_main_name': menu_common.menu.name,
+        #         'menu_main_photo_link': menu_common.menu.photo,
+        #         'language_id': menu_common.language.id,
+        #         'language_name': menu_common.language.name,
+        #         'currency_id': menu_common.currency.id,
+        #         'currency_sign': menu_common.currency.sign,
+        #         'categories': [iter(
+        #             {
+        #                 'menu_category_id': menu_common.menu_category[j].id,
+        #                 'menu_category_name': menu_common.menu_category[j].name,
+        #                 'dishes': [
+        #                     {
+        #                         'measure_unit_id': menu_common.measure_unit[i].id,
+        #                         'measure_unit_name': menu_common.measure_unit[i].name,
+        #                         'dish_main_id': menu_common.dish_main[i].id,
+        #                         'dish_main_name': menu_common.dish_main[i].name,
+        #                         'dish_main_photo': menu_common.dish_main[i].photo,
+        #                         'dish_main_description': menu_common.dish_main[i].description
+        #                     }
+        #                     for i in range(len(menu_common.count_dishes))
+        #                 ]
+        #             }
+        #             for j in range(len(menu_common.menu_category))
+        #         )]
+        #         }
+        # print(data)
         return {'menu_main_id': menu_common.menu.id,
                 'menu_main_name': menu_common.menu.name,
                 'menu_main_photo_link': menu_common.menu.photo,
@@ -20,17 +49,27 @@ class MenuSerializer(BaseSerializer):
                 'language_name': menu_common.language.name,
                 'currency_id': menu_common.currency.id,
                 'currency_sign': menu_common.currency.sign,
-                'data': {f'{i + 1}': {
-                            'menu_category': {'menu_category_id': menu_common.menu_category[i].id,
-                                              'menu_category_name': menu_common.menu_category[i].name},
-                            'measure_unit': {'measure_unit_id': menu_common.measure_unit[i].id,
-                                             'measure_unit_name': menu_common.measure_unit[i].name},
-                            'dish_main': {'dish_main_id': menu_common.dish_main[i].id,
-                                          'dish_main_name': menu_common.dish_main[i].name,
-                                          'dish_main_photo': menu_common.dish_main[i].photo,
-                                          'dish_main_description': menu_common.dish_main[i].description},
-                            'dish_measures': {'dish_measures_id': menu_common.dish_measures[i].id,
-                                              'dish_measures_price_value': menu_common.dish_measures[i].price_value,
-                                              'dish_measures_measure_value': menu_common.dish_measures[i].measure_value}
-                                      } for i in range(len(menu_common.dish_main))}
+                'categories': [
+                    {
+                        'menu_category_id': menu_common.menu_category[j].id,
+                        'menu_category_name': menu_common.menu_category[j].name,
+                        'dishes': [
+                            {
+                                'measure_unit_id': menu_common.measure_unit[j + i].id,
+                                'measure_unit_name': menu_common.measure_unit[j + i].name,
+                                'dish_main_id': menu_common.dish_main[j + i].id,
+                                'dish_main_name': menu_common.dish_main[j + i].name,
+                                'dish_main_photo': menu_common.dish_main[j + i].photo,
+                                'dish_main_description': menu_common.dish_main[j + i].description
+                            }
+                            for i in range(0, len(menu_common.count_dishes))
+                        ]
+                    }
+                    for j in range(0, len(menu_common.menu_category), len(menu_common.count_dishes))
+                ]
                 }
+
+
+def func(c, d):
+    a = (len(c) // len(d))
+    return a
