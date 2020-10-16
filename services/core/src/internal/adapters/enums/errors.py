@@ -98,8 +98,12 @@ class ErrorEnum:
         return AnswerService.get_error_dish_measure_value_and_price_doesnt_exists()
 
     @classproperty
-    def LANGUAGE_AND_CURRENCY_DOESNT_EXISTS(cls) -> Error:
-        return AnswerService.get_error_language_and_currency_doesnt_exists()
+    def LANGUAGE_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_language_doesnt_exists()
+
+    @classproperty
+    def CURRENCY_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_currency_doesnt_exists()
 
     @classproperty
     def MEASURE_UNIT_DOESNT_EXISTS(cls) -> Error:

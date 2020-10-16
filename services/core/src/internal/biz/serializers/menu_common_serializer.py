@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Coroutine
 
 from src.internal.biz.entities.menu_common import MenuCommon
 from src.internal.biz.entities.dish_main import DishMain
@@ -11,50 +11,29 @@ from src.internal.biz.entities.menu_main import MenuMain
 from src.internal.biz.entities.count_dishes import CountDishes
 
 
-def get_menu_common_serialize(menu: list, count_dish_main_for_category) -> Optional[MenuCommon]:
+def get_menu_common_serialize(menu_main: Optional[MenuMain],
+                              language: Optional[Language],
+                              currency: Optional[Currency],
+                              menu_category: Optional[List[MenuCategory]],
+                              dish_main: Optional[List[DishMain]],
+                              dish_measure: Optional[List[DishMeasure]],
+                              measure_unit: Optional[List[MeasureUnit]],
+                              count_dish_in_category: Optional[List[CountDishes]]) -> Optional[MenuCommon]:
     menu_common = MenuCommon(
         main_menu=MenuMain(
-            id=menu[0]['menu_main_id'],
-            name=menu[0]['menu_main_name'],
-            photo=menu[0]['menu_main_photo_link']
+            id=menu_main.id,
+            name=menu_main.name,
+            photo=menu_main.photo
         ),
         language=Language(
-            id=menu[0]['language_id'],
-            name=menu[0]['language_name']
+            id=language.id,
+            name=language.name
         ),
-        menu_category=[
-            MenuCategory(
-                id=menu[i]['menu_category_id'],
-                name=menu[i]['menu_category_name']
-            ) for i in range(len(menu) - len(count_dish_main_for_category))],
-        measure_unit=[
-            MeasureUnit(
-                id=menu[i]['measure_unit_id'],
-                name=menu[i]['measure_unit_short_name']
-            ) for i in range(len(menu) - len(count_dish_main_for_category))],
-        dish_main=[
-            DishMain(
-                id=menu[i]['dish_main_id'],
-                name=menu[i]['dish_main_name'],
-                photo=menu[i]['dish_main_photo_link'],
-                description=menu[i]['dish_main_description'],
-                menu_category=menu[i]['dish_main_menu_category_id']
-            ) for i in range(len(menu) - len(count_dish_main_for_category))],
-        dish_measures=[
-            DishMeasure(
-                id=menu[i]['dish_measure_id'],
-                price_value=menu[i]['dish_measure_price_value'],
-                measure_value=menu[i]['dish_measure_measure_value']
-            ) for i in range(len(menu) - len(count_dish_main_for_category))],
-        currency=Currency(
-            id=menu[0]['currency_id'],
-            sign=menu[0]['currency_sign']
-        ),
-        count_dishes=[
-            CountDishes(
-                id=menu[i]['count_dish_main_id'],
-                cnt=menu[i]['count_dish_main']
-            )for i in range(len(menu) - len(count_dish_main_for_category), len(menu))])
-    for j in range(len(menu) - len(count_dish_main_for_category)):
-        print(menu_common.menu_category[j].id)
+        menu_category=menu_category,
+        measure_unit=measure_unit,
+        dish_main=dish_main,
+        dish_measures=dish_measure,
+        currency=currency,
+        count_dishes=count_dish_in_category
+    )
     return menu_common

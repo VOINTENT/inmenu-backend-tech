@@ -6,6 +6,7 @@ from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.biz.entities.menu_main import MenuMain
+from src.internal.biz.entities.place_main import PlaceMain
 from src.internal.biz.entities.menu_common import MenuCommon
 from src.internal.biz.serializers.menu_common_serializer import get_menu_common_serialize
 
@@ -193,9 +194,9 @@ class MenuMainDao(BaseDao):
                 #     'menu_category_name'],
                 # 'menu_category_menu_main_id': menu_category[int(dish_main[i]['dish_main_menu_category_id'] - count_dish_main_for_category[dish_main[i]['dish_main_menu_category_id'] - 1]['dish_main_menu_category_id'])][
                 #     'menu_category_menu_main_id'],
-                'menu_category_id': dish_main[i]['dish_main_menu_category_id'],
-                'menu_category_name': menu_category[dish_main[i]['dish_main_menu_category_id'] - len(count_dish_main_for_category) - 1]['menu_category_name'],
-                'menu_category_menu_main_id': dish_main[i]['dish_main_menu_main_id'],
+                # 'menu_category_id': dish_main[i]['dish_main_menu_category_id'],
+                # 'menu_category_name': menu_category[dish_main[i]['dish_main_menu_category_id'] - len(count_dish_main_for_category) - 1]['menu_category_name'],
+                # 'menu_category_menu_main_id': dish_main[i]['dish_main_menu_main_id'],
                 'dish_main_id': dish_main[i]['dish_main_id'],
                 'dish_main_name': dish_main[i]['dish_main_name'],
                 'dish_main_photo_link': dish_main[i]['dish_main_photo_link'],
@@ -214,7 +215,37 @@ class MenuMainDao(BaseDao):
         for i in range(len(count_dish_main_for_category)):
             menu.append({
                 'count_dish_main_id': count_dish_main_for_category[int(menu_category[i]['menu_category_id']) - len(count_dish_main_for_category) - 1]['dish_main_menu_category_id'],
-                'count_dish_main': count_dish_main_for_category[int(menu_category[i]['menu_category_id']) - len(count_dish_main_for_category) - 1]['count_dish_main_id_category']})
+                'count_dish_main': count_dish_main_for_category[int(menu_category[i]['menu_category_id']) - len(count_dish_main_for_category) - 1]['count_dish_main_id_category'],
+                'menu_category_id': menu_category[i]['menu_category_id'],
+                'menu_category_name': menu_category[i]['menu_category_name'],
+                'menu_category_menu_main_id': menu_category[i]['menu_category_menu_main_id']})
         print(menu)
         menu_common = get_menu_common_serialize(menu, count_dish_main_for_category)
         return menu_common, None
+
+    async def get_menu_main_by_id(self, menu_id) -> MenuMain:
+        sql = """
+            SELECT
+                menu_main.id 						AS menu_main_id,
+                menu_main.name 						AS menu_main_name,
+                menu_main.photo_link 				AS menu_main_photo_link,
+                menu_main.place_main_id				AS menu_main_place_main_id   
+            FROM 
+                menu_main
+            WHERE 
+                menu_main.id = $1
+                               """
+        if self.conn:
+            data = await self.conn.fetchrow(sql, menu_id)
+        else:
+            async with self.pool.acquire() as conn:
+                data = await conn.fetchrow(sql, menu_id)
+        print(data)
+        if not data:
+            return ErrorEnum.MENU_MAIN_DOESNT_EXISTS
+        menu_main = MenuMain(
+                    id=data['menu_main_id'],
+                    name=data['menu_main_name'],
+                    photo=data['menu_main_photo_link'],
+                    place_main=PlaceMain(id=data['menu_main_place_main_id']))
+        return menu_main
