@@ -6,7 +6,6 @@ from src.internal.biz.entities.measure_unit import MeasureUnit
 class MeasureUnitDao(BaseDao):
 
     async def get(self, tuple_measure_unit):
-        print(tuple_measure_unit)
         sql = f"""
             SELECT 
                 measure_unit.id                     AS measure_unit_id,

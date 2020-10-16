@@ -15,35 +15,6 @@ class MenuSerializer(BaseSerializer):
 
     @staticmethod
     def _ser_for_get_menu(menu_common: Optional[MenuCommon]):
-        print(len(menu_common.menu_category))
-        print(len(menu_common.count_dishes))
-        # data = {'menu_main_id': menu_common.menu.id,
-        #         'menu_main_name': menu_common.menu.name,
-        #         'menu_main_photo_link': menu_common.menu.photo,
-        #         'language_id': menu_common.language.id,
-        #         'language_name': menu_common.language.name,
-        #         'currency_id': menu_common.currency.id,
-        #         'currency_sign': menu_common.currency.sign,
-        #         'categories': [iter(
-        #             {
-        #                 'menu_category_id': menu_common.menu_category[j].id,
-        #                 'menu_category_name': menu_common.menu_category[j].name,
-        #                 'dishes': [
-        #                     {
-        #                         'measure_unit_id': menu_common.measure_unit[i].id,
-        #                         'measure_unit_name': menu_common.measure_unit[i].name,
-        #                         'dish_main_id': menu_common.dish_main[i].id,
-        #                         'dish_main_name': menu_common.dish_main[i].name,
-        #                         'dish_main_photo': menu_common.dish_main[i].photo,
-        #                         'dish_main_description': menu_common.dish_main[i].description
-        #                     }
-        #                     for i in range(len(menu_common.count_dishes))
-        #                 ]
-        #             }
-        #             for j in range(len(menu_common.menu_category))
-        #         )]
-        #         }
-        # print(data)
         return {'menu_main_id': menu_common.menu.id,
                 'menu_main_name': menu_common.menu.name,
                 'menu_main_photo_link': menu_common.menu.photo,
@@ -51,45 +22,26 @@ class MenuSerializer(BaseSerializer):
                 'language_name': menu_common.language.name,
                 'currency_id': menu_common.currency.id,
                 'currency_sign': menu_common.currency.sign,
-                'categories': categories(menu_common)
-                #     {
-                #         'menu_category_id': menu_common.menu_category[j].id,
-                #         'menu_category_name': menu_common.menu_category[j].name,
-                #         'dishes': [
-                #             {
-                #                 'measure_unit_id': menu_common.measure_unit[j + menu_common.count_dishes[i].cnt].id,
-                #                 'measure_unit_name': menu_common.measure_unit[j + menu_common.count_dishes[i].cnt].name,
-                #                 'dish_main_id': menu_common.dish_main[j + menu_common.count_dishes[i].cnt].id,
-                #                 'dish_main_name': menu_common.dish_main[j + menu_common.count_dishes[i].cnt].name,
-                #                 'dish_main_photo': menu_common.dish_main[j + menu_common.count_dishes[i].cnt].photo,
-                #                 'dish_main_description': menu_common.dish_main[j + menu_common.count_dishes[i].cnt].description
-                #             }
-                #             for i in range(0, len(menu_common.count_dishes))
-                #         ]
-                #     }
-                #     for j in range(0, len(menu_common.menu_category))
-                # ]
+                'categories': [categories(category, menu_common) for category in menu_common.menu_category]
                 }
 
 
-def categories(menu_common):
-    data = []
-    for i in range(len(menu_common.menu_category)):
-        data.append({
-            'menu_category_id': menu_common.menu_category[i].id,
-            'menu_category_name': menu_common.menu_category[i].name,
-            'dishes': dishes(menu_common, menu_common.count_dishes[i].cnt)
-        })
+def categories(category, menu_common):
+    data = {
+        'menu_category_id': category.id,
+        'menu_category_name': category.name,
+        'dishes': [dishes(i, menu_common) for i in menu_common.dish_main if i.menu_category.id == category.id]
+    }
+    return data
 
 
-def dishes(menu_common, menu_count):
-    data = []
-    for i in range(menu_count):
-        data.append({
-                'measure_unit_id': menu_common.measure_unit[i].id,
-                'measure_unit_name': menu_common.measure_unit[i].name,
-                'dish_main_id': menu_common.dish_main[i].id,
-                'dish_main_name': menu_common.dish_main[i].name,
-                'dish_main_photo': menu_common.dish_main[i].photo,
-                'dish_main_description': menu_common.dish_main[i].description
-        })
+def dishes(i, menu_common):
+    data = {
+        'measure_unit_id': i.measure_unit.id,
+        'measure_unit_name': menu_common.measure_unit[i.measure_unit.id - 1].short_name,
+        'dish_main_id': i.id,
+        'dish_main_name': i.name,
+        'dish_main_photo': i.photo,
+        'dish_main_description': i.description
+    }
+    return data
