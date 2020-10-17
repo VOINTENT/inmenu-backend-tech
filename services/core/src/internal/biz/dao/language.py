@@ -23,7 +23,7 @@ class LanguageDao(BaseDao):
 
             return Language(id=language_id, code_name=language_code_name), None
 
-    async def get_language_by_menu_id(self, menu_id):
+    async def get_language_by_menu_id(self, menu_id: int) -> Tuple[Optional[Language], Optional[Error]]:
         sql = """
             SELECT 
                 language.id 			            AS language_id,
@@ -49,4 +49,4 @@ class LanguageDao(BaseDao):
             id=data['language_id'],
             name=data['language_name']
         )
-        return language
+        return language, None

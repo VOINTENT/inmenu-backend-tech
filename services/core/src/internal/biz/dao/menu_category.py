@@ -1,4 +1,4 @@
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 from src.internal.adapters.entities.error import Error
 from src.internal.biz.dao.base_dao import BaseDao
@@ -19,7 +19,7 @@ class MenuCategoryDao(BaseDao):
             menu_category.id = menu_category_id
             return menu_category, None
 
-    async def get(self, menu_id):
+    async def get(self, menu_id: int) -> Tuple[Optional[List[MenuCategory]], Optional[Error]]:
         sql = """
             SELECT 
                 menu_category.id                    AS menu_category_id,
@@ -45,4 +45,4 @@ class MenuCategoryDao(BaseDao):
             )
             for i in range(len(data))
         ]
-        return menu_category
+        return menu_category, None

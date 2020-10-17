@@ -1,4 +1,4 @@
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 import asyncpg
 
@@ -41,7 +41,7 @@ class DishMainDao(BaseDao):
         dish_main.id = dish_main_id
         return dish_main, None
 
-    async def get(self, menu_id):
+    async def get(self, menu_id: int) -> Tuple[Optional[List[DishMain]], Optional[Error]]:
         sql = """
             SELECT 
                 dish_main.id                        AS dish_main_id,
@@ -74,4 +74,4 @@ class DishMainDao(BaseDao):
                 measure_unit=MeasureUnit(id=data[i]['dish_main_measure_unit_id']))
             for i in range(len(data))
         ]
-        return dish_main
+        return dish_main, None

@@ -28,7 +28,7 @@ class DishMeasureDao(BaseDao):
 
         return None, None
 
-    async def get(self, menu_id):
+    async def get(self, menu_id: int) -> Tuple[Optional[List[DishMeasure]], Optional[Error]]:
         sql = """
             SELECT 
                 dish_measure.id                     AS dish_measure_id,
@@ -60,4 +60,4 @@ class DishMeasureDao(BaseDao):
                 dish_main=DishMain(id=data[i]['dish_measure_dish_main_id']))
             for i in range(len(data))
         ]
-        return dish_measure
+        return dish_measure, None

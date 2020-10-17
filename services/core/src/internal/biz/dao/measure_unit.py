@@ -1,3 +1,6 @@
+from typing import Tuple, Optional, List
+
+from src.internal.adapters.entities.error import Error
 from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.entities.measure_unit import MeasureUnit
@@ -5,7 +8,7 @@ from src.internal.biz.entities.measure_unit import MeasureUnit
 
 class MeasureUnitDao(BaseDao):
 
-    async def get(self, tuple_measure_unit):
+    async def get(self, tuple_measure_unit: tuple) -> Tuple[Optional[List[MeasureUnit]], Optional[Error]]:
         sql = f"""
             SELECT 
                 measure_unit.id                     AS measure_unit_id,
@@ -28,4 +31,4 @@ class MeasureUnitDao(BaseDao):
                 short_name=data[i]['measure_unit_short_name'])
             for i in range(len(data))
         ]
-        return measure_unit
+        return measure_unit, None
