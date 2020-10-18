@@ -37,7 +37,7 @@ class MenuCategoryDao(BaseDao):
                 data = await conn.fetch(sql, menu_id)
         if not data:
             return None, ErrorEnum.MENU_CATEGORY_DOESNT_EXISTS
-        menu_category = [
+        menu_categories = [
             MenuCategory(
                 id=data[i]['menu_category_id'],
                 name=data[i]['menu_category_name'],
@@ -45,4 +45,4 @@ class MenuCategoryDao(BaseDao):
             )
             for i in range(len(data))
         ]
-        return menu_category, None
+        return menu_categories, None

@@ -25,10 +25,10 @@ class MeasureUnitDao(BaseDao):
                 data = await conn.fetch(sql)
         if not data:
             return None, ErrorEnum.MEASURE_UNIT_DOESNT_EXISTS
-        measure_unit = [
+        measure_units = [
             MeasureUnit(
                 id=data[i]['measure_unit_id'],
                 short_name=data[i]['measure_unit_short_name'])
             for i in range(len(data))
         ]
-        return measure_unit, None
+        return measure_units, None

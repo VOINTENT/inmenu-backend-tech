@@ -2,6 +2,7 @@ from sanic import Blueprint
 from sanic.request import Request
 from sanic.response import json
 
+from src.internal.adapters.entities.error import Error
 from src.internal.adapters.entities.utils import get_response_with_validation_errors
 from src.internal.servers.http.answers.accounts import get_response_menu_detail
 from src.internal.biz.deserializers.menu import DES_MENU_ADD, MenuDeserializer
@@ -28,8 +29,8 @@ async def add_menu(request: Request, auth_account_main_id: int):
 
 
 @menu.route('/<menu_id:int>')
-async def get_menu(request: Request, menu_id: int):
+async def get_menu(request: Request, menu_id: int) -> dict or Error:
     menu_common, err = await MenuService.get_menu(menu_id)
     if err:
-        return None
+        return err.get_response_with_error()
     return get_response_menu_detail(menu_common)

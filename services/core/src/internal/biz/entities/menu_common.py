@@ -14,21 +14,19 @@ class MenuCommon:
 
     def __init__(self, main_menu: Optional[MenuMain] = None,
                  language: Optional[Language] = None,
-                 menu_category: Optional[List[MenuCategory]] = None,
-                 measure_unit: Optional[List[MeasureUnit]] = None,
-                 dish_main: Optional[List[DishMain]] = None,
+                 menu_categories: Optional[List[MenuCategory]] = None,
+                 measure_units: Optional[List[MeasureUnit]] = None,
+                 dishes_main: Optional[List[DishMain]] = None,
                  dish_measures: Optional[List[DishMeasure]] = None,
-                 currency: Optional[Currency] = None,
-                 count_dishes: Optional[List[CountDishes]] = None
+                 currency: Optional[Currency] = None
                  ) -> None:
         self.__main_menu = main_menu
-        self.__dish_main = dish_main
+        self.__dishes_main = dishes_main
         self.__dish_measures = dish_measures
-        self.__menu_category = menu_category
+        self.__menu_categories = menu_categories
         self.__language = language
         self.__currency = currency
-        self.__measure_unit = measure_unit
-        self.__count_dishes = count_dishes
+        self.__measure_units = measure_units
 
     @property
     def menu(self) -> Optional[MenuMain]:
@@ -36,7 +34,7 @@ class MenuCommon:
 
     @property
     def dish_main(self) -> Optional[List[DishMain]]:
-        return self.__dish_main
+        return self.__dishes_main
 
     @property
     def dish_measures(self) -> Optional[List[DishMeasure]]:
@@ -44,7 +42,7 @@ class MenuCommon:
 
     @property
     def menu_category(self) -> Optional[List[MenuCategory]]:
-        return self.__menu_category
+        return self.__menu_categories
 
     @property
     def language(self) -> Optional[Language]:
@@ -56,8 +54,4 @@ class MenuCommon:
 
     @property
     def measure_unit(self) -> Optional[List[MeasureUnit]]:
-        return self.__measure_unit
-
-    @property
-    def count_dishes(self) -> Optional[List[int]]:
-        return self.__count_dishes
+        return self.__measure_units

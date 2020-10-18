@@ -63,7 +63,7 @@ class DishMainDao(BaseDao):
                 data = await conn.fetch(sql, menu_id)
         if not data:
             return None, ErrorEnum.DISHES_DOESNT_EXISTS
-        dish_main = [
+        dishes_main = [
             DishMain(
                 id=data[i]['dish_main_id'],
                 name=data[i]['dish_main_name'],
@@ -74,4 +74,4 @@ class DishMainDao(BaseDao):
                 measure_unit=MeasureUnit(id=data[i]['dish_main_measure_unit_id']))
             for i in range(len(data))
         ]
-        return dish_main, None
+        return dishes_main, None

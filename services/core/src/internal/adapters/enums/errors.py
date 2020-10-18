@@ -86,10 +86,6 @@ class ErrorEnum:
         return AnswerService.get_error_menu_main_doesnt_exists()
 
     @classproperty
-    def MENU_CATEGORY_DOESNT_EXISTS(cls) -> Error:
-        return AnswerService.get_error_menu_category_doesnt_exists()
-
-    @classproperty
     def DISHES_DOESNT_EXISTS(cls) -> Error:
         return AnswerService.get_error_dishes_doesnt_exists()
 
@@ -106,5 +102,5 @@ class ErrorEnum:
         return AnswerService.get_error_currency_doesnt_exists()
 
     @classproperty
-    def MEASURE_UNIT_DOESNT_EXISTS(cls) -> Error:
-        return AnswerService.get_error_measure_unit_doesnt_exists()
+    def MENU_COMMON_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_menu_common_doesnt_exists()

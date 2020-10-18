@@ -52,7 +52,7 @@ class DishMeasureDao(BaseDao):
                 data = await conn.fetch(sql, menu_id)
         if not data:
             return ErrorEnum.DISH_MEASURE_VALUE_AND_PRICE_DOESNT_EXISTS
-        dish_measure = [
+        dish_measures = [
             DishMeasure(
                 id=data[i]['dish_measure_id'],
                 price_value=data[i]['dish_measure_price_value'],
@@ -60,4 +60,4 @@ class DishMeasureDao(BaseDao):
                 dish_main=DishMain(id=data[i]['dish_measure_dish_main_id']))
             for i in range(len(data))
         ]
-        return dish_measure, None
+        return dish_measures, None

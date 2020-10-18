@@ -12,6 +12,8 @@ class MenuSerializer(BaseSerializer):
     def _get_serializer(cls, format_ser: str):
         if format_ser == SER_FOR_GET_MENU:
             return cls._ser_for_get_menu
+        else:
+            raise TypeError
 
     @staticmethod
     def _ser_for_get_menu(menu_common: Optional[MenuCommon]):
@@ -22,26 +24,26 @@ class MenuSerializer(BaseSerializer):
                 'language_name': menu_common.language.name,
                 'currency_id': menu_common.currency.id,
                 'currency_sign': menu_common.currency.sign,
-                'categories': [categories(category, menu_common) for category in menu_common.menu_category]
+                'categories': [MenuSerializer.categories(category, menu_common) for category in menu_common.menu_category]
                 }
 
+    @staticmethod
+    def categories(category, menu_common):
+        data = {
+            'menu_category_id': category.id,
+            'menu_category_name': category.name,
+            'dishes': [MenuSerializer.dishes(i, menu_common) for i in menu_common.dish_main if i.menu_category.id == category.id]
+        }
+        return data
 
-def categories(category, menu_common):
-    data = {
-        'menu_category_id': category.id,
-        'menu_category_name': category.name,
-        'dishes': [dishes(i, menu_common) for i in menu_common.dish_main if i.menu_category.id == category.id]
-    }
-    return data
-
-
-def dishes(i, menu_common):
-    data = {
-        'measure_unit_id': i.measure_unit.id,
-        'measure_unit_name': menu_common.measure_unit[i.measure_unit.id - 1].short_name,
-        'dish_main_id': i.id,
-        'dish_main_name': i.name,
-        'dish_main_photo': i.photo,
-        'dish_main_description': i.description
-    }
-    return data
+    @staticmethod
+    def dishes(i, menu_common):
+        data = {
+            'measure_unit_id': i.measure_unit.id,
+            'measure_unit_name': menu_common.measure_unit[i.measure_unit.id - 1].short_name,
+            'dish_main_id': i.id,
+            'dish_main_name': i.name,
+            'dish_main_photo': i.photo,
+            'dish_main_description': i.description
+        }
+        return data
