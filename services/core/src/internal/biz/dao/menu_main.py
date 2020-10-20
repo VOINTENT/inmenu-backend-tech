@@ -1,7 +1,5 @@
 from typing import Tuple, Optional
 
-from datetime import datetime
-
 import asyncpg
 
 from src.internal.adapters.entities.error import Error
@@ -11,9 +9,7 @@ from src.internal.biz.deserializers.menu_main import MENU_MAIN_ID, MENU_MAIN_NAM
     DES_MENU_MAIN_FROM_DB_FULL
 from src.internal.biz.deserializers.photo import PHOTO_SHORT_URL
 from src.internal.biz.entities.menu_main import MenuMain
-from src.internal.biz.entities.place_main import PlaceMain
-from src.internal.biz.entities.menu_common import MenuCommon
-from src.internal.biz.serializers.menu_common_serializer import get_menu_common_serialize
+from src.internal.biz.serializers.entities_serializer.menu_main_serializer import menu_main_serializer
 
 MENU_PLACE_MAIN_FKEY = 'menu-place-main-fkey'
 
@@ -74,17 +70,20 @@ class MenuMainDao(BaseDao):
             WHERE 
                 menu_main.id = $1
                                """
+
         if self.conn:
             data = await self.conn.fetchrow(sql, menu_id)
         else:
             async with self.pool.acquire() as conn:
                 data = await conn.fetchrow(sql, menu_id)
+
         if not data:
             return None, ErrorEnum.MENU_MAIN_DOESNT_EXISTS
-        menu_main = MenuMain(
-                    id=data['menu_main_id'],
-                    name=data['menu_main_name'],
-                    photo=data['menu_main_photo_link'],
-                    place_main=PlaceMain(id=data['menu_main_place_main_id']))
+
+        menu_main = menu_main_serializer(data)
+
+        if not menu_main:
+            return None, ErrorEnum.MENU_MAIN_DOESNT_EXISTS
+
         return menu_main, None
 

@@ -4,6 +4,7 @@ from src.internal.adapters.entities.error import Error
 from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.entities.measure_unit import MeasureUnit
+from src.internal.biz.serializers.entities_serializer.measure_unit_serializer import measure_unit_serializer
 
 
 class MeasureUnitDao(BaseDao):
@@ -23,12 +24,13 @@ class MeasureUnitDao(BaseDao):
         else:
             async with self.pool.acquire() as conn:
                 data = await conn.fetch(sql)
+
         if not data:
             return None, ErrorEnum.MEASURE_UNIT_DOESNT_EXISTS
-        measure_units = [
-            MeasureUnit(
-                id=data[i]['measure_unit_id'],
-                short_name=data[i]['measure_unit_short_name'])
-            for i in range(len(data))
-        ]
+
+        measure_units = measure_unit_serializer(data)
+
+        if not measure_units:
+            return None, ErrorEnum.MEASURE_UNIT_DOESNT_EXISTS
+
         return measure_units, None

@@ -11,9 +11,7 @@ from src.internal.biz.deserializers.dish_main import DISH_MAIN_NAME, DISH_MAIN, 
 from src.internal.biz.deserializers.measure_unit import MEASURE_UNIT_SHORT_NAME
 from src.internal.biz.deserializers.photo import PHOTO_SHORT_URL
 from src.internal.biz.entities.dish_main import DishMain
-from src.internal.biz.entities.menu_main import MenuMain
-from src.internal.biz.entities.menu_category import MenuCategory
-from src.internal.biz.entities.measure_unit import MeasureUnit
+from src.internal.biz.serializers.entities_serializer.dish_main_serializer import dishes_main_serializer
 
 MEASURE_UNIT_FKEY = 'dish_main_measure_unit_id_fkey'
 MENU_CATEGORY_FREY = 'dish_main_menu_category_id_fkey'
@@ -90,18 +88,14 @@ class DishMainDao(BaseDao):
         else:
             async with self.pool.acquire() as conn:
                 data = await conn.fetch(sql, menu_id)
+
         if not data:
             return None, ErrorEnum.DISHES_DOESNT_EXISTS
-        dishes_main = [
-            DishMain(
-                id=data[i]['dish_main_id'],
-                name=data[i]['dish_main_name'],
-                photo=data[i]['dish_main_photo_link'],
-                description=data[i]['dish_main_description'],
-                menu_main=MenuMain(id=data[i]['dish_main_menu_main_id']),
-                menu_category=MenuCategory(id=data[i]['dish_main_menu_category_id']),
-                measure_unit=MeasureUnit(id=data[i]['dish_main_measure_unit_id']))
-            for i in range(len(data))
-        ]
+
+        dishes_main = dishes_main_serializer(data)
+
+        if not dishes_main:
+            return None, ErrorEnum.DISHES_DOESNT_EXISTS
+
         return dishes_main, None
 

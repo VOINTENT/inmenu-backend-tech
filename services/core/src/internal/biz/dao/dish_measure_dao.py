@@ -10,10 +10,8 @@ from src.internal.biz.entities.dish_measure import DishMeasure
 
 from src.internal.biz.entities.dish_measures import DishMeasures
 
-from src.internal.biz.entities.dish_main import DishMain
 from src.internal.adapters.enums.errors import ErrorEnum
-
-
+from src.internal.biz.serializers.entities_serializer.dish_measure_serializer import dish_measure_serializer
 
 
 class DishMeasureDao(BaseDao):
@@ -35,7 +33,6 @@ class DishMeasureDao(BaseDao):
             await self.conn.execute(sql, *inserted_values)
 
         return None, None
-
 
     async def get_by_dish_main_ids(self, dish_main_ids: List[int]) -> Tuple[Optional[DishMeasures], Optional[Error]]:
         async with self.pool.acquire() as conn:
@@ -62,7 +59,7 @@ class DishMeasureDao(BaseDao):
                 dish_measure
             WHERE 
                 dish_measure.dish_main_id IN(SELECT 
-                                                    dish_main.id AS dish_main_id
+                                                dish_main.id AS dish_main_id
                                             FROM 	
                                                 dish_main	
                                             WHERE 
@@ -73,14 +70,13 @@ class DishMeasureDao(BaseDao):
         else:
             async with self.pool.acquire() as conn:
                 data = await conn.fetch(sql, menu_id)
+
         if not data:
             return ErrorEnum.DISH_MEASURE_VALUE_AND_PRICE_DOESNT_EXISTS
-        dish_measures = [
-            DishMeasure(
-                id=data[i]['dish_measure_id'],
-                price_value=data[i]['dish_measure_price_value'],
-                measure_value=data[i]['dish_measure_measure_value'],
-                dish_main=DishMain(id=data[i]['dish_measure_dish_main_id']))
-            for i in range(len(data))
-        ]
+
+        dish_measures = dish_measure_serializer(data)
+
+        if not dish_measures:
+            return None, ErrorEnum.DISH_MEASURE_VALUE_AND_PRICE_DOESNT_EXISTS
+
         return dish_measures, None

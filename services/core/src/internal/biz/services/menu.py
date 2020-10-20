@@ -1,12 +1,8 @@
 from typing import Tuple, Optional, List
 
-from loguru import logger
-
 from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.dish_common_dao import DishCommonDao
-from src.internal.biz.dao.dish_main_dao import DishMainDao
-from src.internal.biz.dao.dish_measure_dao import DishMeasureDao
 from src.internal.biz.dao.menu_category import MenuCategoryDao
 from src.internal.biz.dao.menu_main import MenuMainDao
 from src.internal.biz.dao.place_account_role import PlaceAccountRoleDao
@@ -22,7 +18,7 @@ from src.internal.biz.dao.currency import CurrencyDao
 from src.internal.biz.dao.dish_measure_dao import DishMeasureDao
 from src.internal.biz.dao.measure_unit import MeasureUnitDao
 
-from src.internal.biz.serializers.menu_common_serializer import get_menu_common_serialize
+from src.internal.biz.serializers.entities_serializer.menu_common_serializer import get_menu_common_serialize
 
 
 class MenuService(BaseService):
@@ -76,19 +72,21 @@ class MenuService(BaseService):
         if err:
             return None, err
 
-<<<<<<< HEAD
         return dish_common, None
 
     @staticmethod
-    async def get_menu_mains_by_place_main_id(place_main_id: int, pagination_size: int, pagination_after: int) -> Tuple[Optional[List[MenuMain]], Optional[Error]]:
-        place_categories, err = await MenuMainDao().get_by_place_main_id(place_main_id, pagination_size, pagination_after)
+    async def get_menu_mains_by_place_main_id(place_main_id: int, pagination_size: int, pagination_after: int) -> Tuple[
+        Optional[List[MenuMain]], Optional[Error]]:
+        place_categories, err = await MenuMainDao().get_by_place_main_id(place_main_id, pagination_size,
+                                                                         pagination_after)
         if err:
             return None, err
 
         return place_categories, None
 
     @staticmethod
-    async def get_menu_categories_by_menu_category_id(menu_main_id: int) -> Tuple[Optional[List[MenuCategory]], Optional[Error]]:
+    async def get_menu_categories_by_menu_category_id(menu_main_id: int) -> Tuple[
+        Optional[List[MenuCategory]], Optional[Error]]:
         menu_categories, err = await MenuCategoryDao().get_by_menu_main_id(menu_main_id)
         if err:
             return None, err
@@ -96,8 +94,10 @@ class MenuService(BaseService):
         return menu_categories, None
 
     @staticmethod
-    async def get_dishes_by_menu_category_id(menu_category_id, pagination_size: int, pagination_after: int) -> Tuple[Optional[List[DishCommon]], Optional[Error]]:
-        dish_mains, err = await DishMainDao().get_by_menu_category_id(menu_category_id, pagination_size, pagination_after)
+    async def get_dishes_by_menu_category_id(menu_category_id, pagination_size: int, pagination_after: int) -> Tuple[
+        Optional[List[DishCommon]], Optional[Error]]:
+        dish_mains, err = await DishMainDao().get_by_menu_category_id(menu_category_id, pagination_size,
+                                                                      pagination_after)
         if err:
             return None, err
 
@@ -108,10 +108,10 @@ class MenuService(BaseService):
             return None, err
 
         return [
-            DishCommon(dish_main=dish_main, dish_measure=dish_measures.pop_by_dish_main_id(dish_main.id))
-            for dish_main in dish_mains
-        ], None
-=======
+                   DishCommon(dish_main=dish_main, dish_measure=dish_measures.pop_by_dish_main_id(dish_main.id))
+                   for dish_main in dish_mains
+               ], None
+
         return dish_common, err
 
     @staticmethod
@@ -151,15 +151,14 @@ class MenuService(BaseService):
         if error_measure_units:
             return None, error_measure_units
 
-        menu_common, error_menu_common = get_menu_common_serialize(menu_main,
-                                                                   language,
-                                                                   currency,
-                                                                   menu_categories,
-                                                                   dishes_main,
-                                                                   dish_measures,
-                                                                   measure_units)
-        if error_menu_common:
-            return None, error_menu_common
+        menu_common = get_menu_common_serialize(menu_main,
+                                                language,
+                                                currency,
+                                                menu_categories,
+                                                dishes_main,
+                                                dish_measures,
+                                                measure_units)
+        if not menu_common:
+            return None, ErrorEnum.MENU_COMMON_DOESNT_EXISTS
 
         return menu_common, None
->>>>>>> 32d607344be0c728fa040d09adeedcad389487b6

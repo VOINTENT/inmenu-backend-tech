@@ -18,26 +18,17 @@ def get_menu_common_serialize(menu_main: Optional[MenuMain],
                               menu_categories: Optional[List[MenuCategory]],
                               dishes_main: Optional[List[DishMain]],
                               dish_measures: Optional[List[DishMeasure]],
-                              measure_units: Optional[List[MeasureUnit]]) -> Tuple[Optional[MenuCommon], Optional[Error]]:
-    menu_common = MenuCommon(
-        main_menu=MenuMain(
-            id=menu_main.id,
-            name=menu_main.name,
-            photo=menu_main.photo
-        ),
-        language=Language(
-            id=language.id,
-            name=language.name
-        ),
-        menu_categories=menu_categories,
-        measure_units=measure_units,
-        dishes_main=dishes_main,
-        dish_measures=dish_measures,
-        currency=Currency(
-            id=currency.id,
-            sign=currency.sign
+                              measure_units: Optional[List[MeasureUnit]]) -> Optional[MenuCommon]:
+    try:
+        menu_common = MenuCommon(
+            main_menu=menu_main,
+            language=language,
+            menu_categories=menu_categories,
+            measure_units=measure_units,
+            dishes_main=dishes_main,
+            dish_measures=dish_measures,
+            currency=currency
         )
-    )
-    if not menu_common:
-        return None, ErrorEnum.MENU_COMMON_DOESNT_EXISTS
-    return menu_common, None
+        return menu_common
+    except:
+        raise TypeError

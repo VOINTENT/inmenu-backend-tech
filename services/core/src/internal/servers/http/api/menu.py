@@ -35,15 +35,17 @@ async def add_menu(request: Request, auth_account_main_id: int):
     return json({'id': menu_main.id})
 
 
-
 @menu.route('/places/<place_main_id:int>', methods=['GET'])
 @get_pagination_params
-async def get_menu_mains_by_place_main_id(request: Request, place_main_id: int, pagination_size: int, pagination_after: int):
-    menu_mains, err = await MenuService.get_menu_mains_by_place_main_id(place_main_id, pagination_size, pagination_after)
+async def get_menu_mains_by_place_main_id(request: Request, place_main_id: int, pagination_size: int,
+                                          pagination_after: int):
+    menu_mains, err = await MenuService.get_menu_mains_by_place_main_id(place_main_id, pagination_size,
+                                                                        pagination_after)
     if err:
         return err.get_response_with_error()
 
     return get_response_get_menu_mains_by_place_main_id(menu_mains)
+
 
 @menu.route('/<menu_id:int>')
 async def get_menu(request: Request, menu_id: int) -> dict or Error:
@@ -51,4 +53,3 @@ async def get_menu(request: Request, menu_id: int) -> dict or Error:
     if err:
         return err.get_response_with_error()
     return get_response_menu_detail(menu_common)
-

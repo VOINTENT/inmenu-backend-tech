@@ -6,6 +6,7 @@ from src.internal.biz.deserializers.language import LanguageDeserializer, DES_LA
     LANGUAGE_NAME, LANGUAGE_CODE_NAME
 from src.internal.biz.entities.language import Language
 from src.internal.adapters.enums.errors import ErrorEnum
+from src.internal.biz.serializers.entities_serializer.language_serializer import language_serializer
 
 
 class LanguageDao(BaseDao):
@@ -39,31 +40,31 @@ class LanguageDao(BaseDao):
             """, pagination_size, pagination_after)
             return [LanguageDeserializer.deserialize(row, DES_LANGUAGE_FROM_DB_FULL) for row in rows], None
 
-    async def get_language_by_menu_id(self, menu_id: int) -> Tuple[Optional[Language], Optional[Error]]:
+    async def get_language_by_menu_id(self, place_main_id: int) -> Tuple[Optional[Language], Optional[Error]]:
         sql = """
             SELECT 
                 language.id 			            AS language_id,
                 language.name 			            AS language_name
             FROM 
                 language
+            INNER JOIN 
+                place_main ON place_main.main_language = language.id
             WHERE
-                language.id = (SELECT
-                                    place_main.main_language    AS place_main_main_language
-                                FROM 
-                                    place_main
-                                WHERE 
-                                    place_main.id = $1)
+                place_main.main_language = &1
                 """
         if self.conn:
-            data = await self.conn.fetchrow(sql, menu_id)
+            data = await self.conn.fetchrow(sql, place_main_id)
         else:
             async with self.pool.acquire() as conn:
-                data = await conn.fetchrow(sql, menu_id)
+                data = await conn.fetchrow(sql, place_main_id)
+
         if not data:
             return None, ErrorEnum.LANGUAGE_DOESNT_EXISTS
-        language = Language(
-            id=data['language_id'],
-            name=data['language_name']
-        )
+
+        language = language_serializer(data)
+
+        if not language:
+            return None, ErrorEnum.LANGUAGE_DOESNT_EXISTS
+
         return language, None
 

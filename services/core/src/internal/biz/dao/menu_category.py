@@ -5,8 +5,8 @@ from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.biz.deserializers.menu_category import MenuCategoryDeserializer, MENU_CATEGORY_ID, MENU_CATEGORY_NAME, \
     DES_MENU_CATEGORY_FROM_DB_FULL
 from src.internal.biz.entities.menu_category import MenuCategory
-from src.internal.biz.entities.menu_main import MenuMain
 from src.internal.adapters.enums.errors import ErrorEnum
+from src.internal.biz.serializers.entities_serializer.menu_category_serializer import menu_category_serializer
 
 
 class MenuCategoryDao(BaseDao):
@@ -41,7 +41,6 @@ class MenuCategoryDao(BaseDao):
 
             return [MenuCategoryDeserializer.deserialize(row, DES_MENU_CATEGORY_FROM_DB_FULL) for row in rows], None
 
-
     async def get(self, menu_id: int) -> Tuple[Optional[List[MenuCategory]], Optional[Error]]:
         sql = """
             SELECT 
@@ -58,15 +57,13 @@ class MenuCategoryDao(BaseDao):
         else:
             async with self.pool.acquire() as conn:
                 data = await conn.fetch(sql, menu_id)
+
         if not data:
             return None, ErrorEnum.MENU_CATEGORY_DOESNT_EXISTS
-        menu_categories = [
-            MenuCategory(
-                id=data[i]['menu_category_id'],
-                name=data[i]['menu_category_name'],
-                menu_main=MenuMain(id=data[i]['menu_category_menu_main_id'])
-            )
-            for i in range(len(data))
-        ]
-        return menu_categories, None
 
+        menu_categories = menu_category_serializer(data)
+
+        if not menu_categories:
+            return None, ErrorEnum.MENU_CATEGORY_DOESNT_EXISTS
+
+        return menu_categories, None
