@@ -96,3 +96,24 @@ class ErrorEnum:
     @classproperty
     def NOT_FOUND(cls) -> Error:
         return AnswerService.get_error_not_found()
+
+    @classproperty
+    def DISHES_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_dishes_doesnt_exists()
+
+    @classproperty
+    def DISH_MEASURE_VALUE_AND_PRICE_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_dish_measure_value_and_price_doesnt_exists()
+
+    @classproperty
+    def LANGUAGE_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_language_doesnt_exists()
+
+    @classproperty
+    def CURRENCY_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_currency_doesnt_exists()
+
+    @classproperty
+    def MENU_COMMON_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_menu_common_doesnt_exists()
+

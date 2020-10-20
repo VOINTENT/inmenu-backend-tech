@@ -7,7 +7,13 @@ from src.internal.biz.deserializers.dish_measure import DISH_MEASURE_PRICE_VALUE
     DISH_MEASURE
 from src.internal.biz.deserializers.dish_measures import DishMeasuresDeserializer, DES_DISH_MEASURES_FROM_DB_FULL
 from src.internal.biz.entities.dish_measure import DishMeasure
+
 from src.internal.biz.entities.dish_measures import DishMeasures
+
+from src.internal.biz.entities.dish_main import DishMain
+from src.internal.adapters.enums.errors import ErrorEnum
+
+
 
 
 class DishMeasureDao(BaseDao):
@@ -30,6 +36,7 @@ class DishMeasureDao(BaseDao):
 
         return None, None
 
+
     async def get_by_dish_main_ids(self, dish_main_ids: List[int]) -> Tuple[Optional[DishMeasures], Optional[Error]]:
         async with self.pool.acquire() as conn:
             rows = await conn.fetch(f"""
@@ -43,3 +50,37 @@ class DishMeasureDao(BaseDao):
             """, dish_main_ids)
 
             return DishMeasuresDeserializer.deserialize(rows, DES_DISH_MEASURES_FROM_DB_FULL), None
+
+    async def get(self, menu_id: int) -> Tuple[Optional[List[DishMeasure]], Optional[Error]]:
+        sql = """
+            SELECT 
+                dish_measure.id                     AS dish_measure_id,
+                dish_measure.price_value            AS dish_measure_price_value,
+                dish_measure.measure_value          AS dish_measure_measure_value,
+                dish_measure.dish_main_id			AS dish_measure_dish_main_id
+            FROM 
+                dish_measure
+            WHERE 
+                dish_measure.dish_main_id IN(SELECT 
+                                                    dish_main.id AS dish_main_id
+                                            FROM 	
+                                                dish_main	
+                                            WHERE 
+                                                dish_main.menu_main_id = $1)
+                """
+        if self.conn:
+            data = await self.conn.fetch(sql, menu_id)
+        else:
+            async with self.pool.acquire() as conn:
+                data = await conn.fetch(sql, menu_id)
+        if not data:
+            return ErrorEnum.DISH_MEASURE_VALUE_AND_PRICE_DOESNT_EXISTS
+        dish_measures = [
+            DishMeasure(
+                id=data[i]['dish_measure_id'],
+                price_value=data[i]['dish_measure_price_value'],
+                measure_value=data[i]['dish_measure_measure_value'],
+                dish_main=DishMain(id=data[i]['dish_measure_dish_main_id']))
+            for i in range(len(data))
+        ]
+        return dish_measures, None
