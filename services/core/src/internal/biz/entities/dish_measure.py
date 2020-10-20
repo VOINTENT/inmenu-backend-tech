@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from src.internal.biz.entities.abstract_model import AbstractModel
+from src.internal.biz.entities.currency import Currency
 from src.internal.biz.entities.dish_main import DishMain
 
 
@@ -10,8 +11,8 @@ class DishMeasure(AbstractModel):
                  created_at: Optional[datetime] = None,
                  edited_at: Optional[datetime] = None,
                  dish_main: Optional[DishMain] = None,
-                 price_value: int = None,
-                 measure_value: int = None) -> None:
+                 price_value: Optional[int] = None,
+                 measure_value: Optional[int] = None) -> None:
         super().__init__(id, created_at, edited_at)
         self.__dish_main = dish_main
         self.__price_value = price_value

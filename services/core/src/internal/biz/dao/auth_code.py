@@ -84,12 +84,13 @@ class AuthCodeDao(BaseDao):
 
             return auth_code, None
 
-    async def set_is_confirm(self, is_confirmed: bool) -> Tuple[None, Optional[Error]]:
+    async def set_is_confirm(self, account_main_id: int, is_confirmed: bool) -> Tuple[None, Optional[Error]]:
         async with self.pool.acquire() as conn:
             await conn.execute(
                 """
                 UPDATE account_main
-                SET is_confirmed = $1
-                """, is_confirmed
+                SET is_confirmed = $2
+                WHERE account_main.id = $1
+                """, account_main_id, is_confirmed
             )
             return None, None

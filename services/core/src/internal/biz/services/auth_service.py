@@ -19,21 +19,17 @@ class AuthService(BaseService):
     @staticmethod
     async def register(account_main: AccountMain) -> Tuple[Optional[AccountMain], Optional[Error]]:
         account_main.create_hash_password()
-        account_main, err = await AccountMainDao().add(account_main)
+        account_main.is_confirmed = False
+        account_main, err = await AuthService._add_account_main_and_create_session(account_main)
         if err:
             return None, err
-
-        account_session = AccountSession(account_main=account_main)
-        account_session, err = await AccountSessionDao().add(account_session)
-        if err:
-            return None, err
-
-        account_main.auth_token = account_session.create_token()
 
         auth_code = AuthCode(account_main=account_main)
         auth_code.create_random_code()
 
         _, err = await AuthCodeDao().add(auth_code)
+        if err:
+            return None, err
 
         account_main.is_email_sent = Mail.send_email(EMAIL_CODE_TYPE, account_main.email, auth_code.code)
 
@@ -114,4 +110,59 @@ class AuthService(BaseService):
         else:
             _, err = await AuthCodeDao().add(auth_code)
 
+        account_main, err = await AccountMainDao().get_email_by_id(auth_account_main_id)
+        if err:
+            return None, err
+
+        _ = Mail.send_email(EMAIL_CODE_TYPE, account_main.email, auth_code.code)
+
         return None, None
+
+    @staticmethod
+    async def auth_by_gmail(account_main: AccountMain) -> Tuple[Optional[AccountMain], Optional[Error]]:
+        # TODO Добавить валидацию пользователя в гугле
+        old_account_main, err = await AccountMainDao().get_by_email(account_main.email)
+        if err:
+            return None, err
+
+        if old_account_main:
+            if not old_account_main.is_confirmed:
+                _, err = await AuthCodeDao().set_is_confirm(old_account_main.id, True)
+                if err:
+                    return None, err
+
+                account_main.is_confirmed = True
+
+            old_account_main, err = await AuthService._create_session(old_account_main)
+            return old_account_main, None
+
+        account_main.create_name_from_email()
+        account_main.is_confirmed = True
+        account_main, err = await AuthService._add_account_main_and_create_session(account_main)
+        if err:
+            return None, err
+
+        return account_main, None
+
+    @staticmethod
+    async def _add_account_main_and_create_session(account_main: AccountMain) -> Tuple[Optional[AccountMain], Optional[Error]]:
+        account_main, err = await AccountMainDao().add(account_main)
+        if err:
+            return None, err
+
+        account_main, err = await AuthService._create_session(account_main)
+        if err:
+            return None, err
+
+        return account_main, None
+
+    @staticmethod
+    async def _create_session(account_main: AccountMain) -> Tuple[Optional[AccountMain], Optional[Error]]:
+        account_session = AccountSession(account_main=account_main)
+        account_session, err = await AccountSessionDao().add(account_session)
+        if err:
+            return None, err
+
+        account_main.auth_token = account_session.create_token()
+
+        return account_main, None

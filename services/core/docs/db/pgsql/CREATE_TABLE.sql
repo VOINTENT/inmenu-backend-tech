@@ -48,7 +48,8 @@ CREATE TABLE account_main(
     created_at TIMESTAMP with time zone NOT NULL DEFAULT current_timestamp,
     edited_at TIMESTAMP with time zone NOT NULL DEFAULT current_timestamp,
     email VARCHAR(100) NOT NULL CONSTRAINT unique_account_email UNIQUE,
-    hash_password VARCHAR(300) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    hash_password VARCHAR(300),
     balance INTEGER NOT NULL DEFAULT 0,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     is_confirmed BOOLEAN NOT NULL DEFAULT FALSE
@@ -159,13 +160,13 @@ CREATE TABLE place_main(
     id INTEGER DEFAULT nextval('place_main_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    account_main_id INTEGER REFERENCES account_main(id),
-    main_language SMALLINT REFERENCES language(id),
+    account_main_id INTEGER REFERENCES account_main(id) ON DELETE CASCADE,
+    main_language SMALLINT REFERENCES language(id) ON DELETE CASCADE,
     name VARCHAR(50),
     login VARCHAR(50) CONSTRAINT unique_place_login UNIQUE,
     photo_link VARCHAR (500),
     description VARCHAR (2000),
-    main_currency INTEGER REFERENCES currency(id),
+    main_currency_id INTEGER REFERENCES currency(id) ON DELETE CASCADE,
     is_draft BOOLEAN NOT NULL,
     is_published BOOLEAN NOT NULL
 );
@@ -182,8 +183,8 @@ CREATE TABLE place_place_type(
     id INTEGER DEFAULT nextval('place_place_type_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    place_main_id INTEGER NOT NULL REFERENCES place_main(id),
-    place_type_id INTEGER NOT NULL REFERENCES place_type(id),
+    place_main_id INTEGER NOT NULL REFERENCES place_main(id) ON DELETE CASCADE,
+    place_type_id INTEGER NOT NULL REFERENCES place_type(id) ON DELETE CASCADE,
     CONSTRAINT unique_place_place_type UNIQUE (place_main_id, place_type_id)
 );
 
@@ -199,8 +200,8 @@ CREATE TABLE place_service(
     id INTEGER DEFAULT nextval('place_service_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    place_main_id INTEGER NOT NULL REFERENCES place_main(id),
-    service_id INTEGER NOT NULL REFERENCES service(id),
+    place_main_id INTEGER NOT NULL REFERENCES place_main(id) ON DELETE CASCADE,
+    service_id INTEGER NOT NULL REFERENCES service(id) ON DELETE CASCADE,
     CONSTRAINT unique_place_service UNIQUE (place_main_id, service_id)
 );
 
@@ -217,8 +218,8 @@ CREATE TABLE place_cuisine_type(
     id INTEGER DEFAULT nextval('place_cuisine_type_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    place_main_id INTEGER NOT NULL REFERENCES place_main(id),
-    cuisine_type_id INTEGER NOT NULL REFERENCES cuisine_type(id),
+    place_main_id INTEGER NOT NULL REFERENCES place_main(id) ON DELETE CASCADE,
+    cuisine_type_id INTEGER NOT NULL REFERENCES cuisine_type(id) ON DELETE CASCADE,
     CONSTRAINT unique_place_cuisine_type UNIQUE (place_main_id, cuisine_type_id)
 );
 
@@ -234,7 +235,7 @@ CREATE TABLE place_work_hours(
     id INTEGER DEFAULT nextval('place_work_hours_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    place_main_id INTEGER NOT NULL REFERENCES place_main(id),
+    place_main_id INTEGER NOT NULL REFERENCES place_main(id) ON DELETE CASCADE,
     week_day VARCHAR(5) NOT NULL CONSTRAINT valid_week_day CHECK (week_day IN ('mo', 'tu', 'we', 'th', 'fr', 'sa', 'su')),
     time_start TIME,
     time_finish TIME,
@@ -253,9 +254,10 @@ CREATE TABLE place_location(
     id INTEGER DEFAULT nextval('place_cuisine_type_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    place_main_id INTEGER REFERENCES place_main(id),
+    place_main_id INTEGER REFERENCES place_main(id) ON DELETE CASCADE,
     full_location VARCHAR(500) NOT NULL,
     city VARCHAR(100) NOT NULL,
+    country VARCHAR(100) NOT NULL,
     coords POINT
 );
 
@@ -271,7 +273,7 @@ CREATE TABLE place_contacts(
     id INTEGER DEFAULT nextval('place_contacts_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    place_main_id INTEGER REFERENCES place_main(id),
+    place_main_id INTEGER REFERENCES place_main(id) ON DELETE CASCADE,
     phone_number VARCHAR(12),
     email VARCHAR(100),
     site_link VARCHAR(200),
@@ -292,7 +294,7 @@ CREATE TABLE menu_main(
     id INTEGER DEFAULT nextval('menu_main_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    place_main_id INTEGER REFERENCES place_main(id),
+    place_main_id INTEGER REFERENCES place_main(id) ON DELETE CASCADE,
     name VARCHAR(50) NOT NULL,
     photo_link VARCHAR (500)
 );
@@ -309,7 +311,7 @@ CREATE TABLE menu_category(
     id INTEGER DEFAULT nextval('menu_category_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    menu_main_id INTEGER REFERENCES menu_main(id),
+    menu_main_id INTEGER REFERENCES menu_main(id) ON DELETE CASCADE,
     name VARCHAR(64) NOT NULL
 );
 
@@ -325,9 +327,9 @@ CREATE TABLE place_account_role(
     id INTEGER DEFAULT nextval('place_account_role_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    place_main_id INTEGER REFERENCES place_main(id),
-    account_main_id INTEGER REFERENCES account_main(id),
-    account_status_id SMALLINT REFERENCES account_status(id),
+    place_main_id INTEGER REFERENCES place_main(id) ON DELETE CASCADE,
+    account_main_id INTEGER REFERENCES account_main(id) ON DELETE CASCADE,
+    account_status_id SMALLINT REFERENCES account_status(id) ON DELETE CASCADE,
     UNIQUE (place_main_id, account_main_id)
 );
 
@@ -362,9 +364,9 @@ CREATE TABLE dish_main(
     name VARCHAR(100) NOT NULL,
     photo_link VARCHAR(500) NOT NULL,
     description VARCHAR(1000) NOT NULL,
-    menu_main_id INTEGER REFERENCES menu_main(id) NOT NULL,
-    menu_category_id INTEGER REFERENCES menu_category(id) NOT NULL,
-    measure_unit_id INTEGER REFERENCES measure_unit(id) NOT NULL
+    menu_main_id INTEGER NOT NULL REFERENCES menu_main(id) ON DELETE CASCADE,
+    menu_category_id INTEGER NOT NULL REFERENCES menu_category(id) ON DELETE CASCADE,
+    measure_unit_id INTEGER NOT NULL REFERENCES measure_unit(id) ON DELETE CASCADE
 );
 
 -- -----------------------------------------------------------------------------
@@ -379,7 +381,7 @@ CREATE TABLE dish_measure(
     id INTEGER DEFAULT nextval('dish_measure_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    dish_main_id INTEGER NOT NULL REFERENCES dish_main(id),
+    dish_main_id INTEGER NOT NULL REFERENCES dish_main(id) ON DELETE CASCADE,
     price_value INTEGER NOT NULL,
     measure_value INTEGER NOT NULL
 );
@@ -396,7 +398,41 @@ CREATE TABLE cuisine_type_translate(
     id INTEGER DEFAULT nextval('cuisine_type_translate_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    cuisine_type_id INTEGER NOT NULL REFERENCES cuisine_type(id),
-    language_id INTEGER NOT NULL REFERENCES language(id),
+    cuisine_type_id INTEGER NOT NULL REFERENCES cuisine_type(id) ON DELETE CASCADE,
+    language_id INTEGER NOT NULL REFERENCES language(id) ON DELETE CASCADE,
+    name VARCHAR(50) NOT NULL
+);
+
+-- -----------------------------------------------------------------------------
+
+DROP SEQUENCE IF EXISTS place_type_translate_id_seq CASCADE;
+
+CREATE SEQUENCE place_type_translate_id_seq START 1;
+
+DROP TABLE IF EXISTS place_type_translate CASCADE;
+
+CREATE TABLE place_type_translate(
+    id INTEGER DEFAULT nextval('place_type_translate_id_seq') PRIMARY KEY,
+    created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
+    edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
+    place_type_id INTEGER NOT NULL REFERENCES place_type(id) ON DELETE CASCADE,
+    language_id INTEGER NOT NULL REFERENCES language(id) ON DELETE CASCADE,
+    name VARCHAR(50) NOT NULL
+);
+
+-- -----------------------------------------------------------------------------
+
+DROP SEQUENCE IF EXISTS service_translate_id_seq CASCADE;
+
+CREATE SEQUENCE service_translate_id_seq START 1;
+
+DROP TABLE IF EXISTS service_translate CASCADE;
+
+CREATE TABLE service_translate(
+    id INTEGER DEFAULT nextval('service_translate_id_seq') PRIMARY KEY,
+    created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
+    edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
+    service_id INTEGER NOT NULL REFERENCES place_type(id) ON DELETE CASCADE,
+    language_id INTEGER NOT NULL REFERENCES language(id) ON DELETE CASCADE,
     name VARCHAR(50) NOT NULL
 );

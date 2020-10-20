@@ -38,6 +38,10 @@ class AnswerService(BaseService):
     def get_wrong_phone_number_format():
         return ValidationError(-108, 'Формат номера телефона должен иметь вид: 7XXXXXXXXXX: ', 400)
 
+    @staticmethod
+    def get_error_not_gmail():
+        return ValidationError(-109, 'Почта должна быть указана с доменом @gmail.com: ', 400)
+
 #     ==================================================================================
 #     Auth errors
 
@@ -72,6 +76,10 @@ class AnswerService(BaseService):
     @staticmethod
     def get_error_email_is_not_confirmed() -> Error:
         return Error(-208, 'Вы не можете выполнить данное действие, пока не подтвердите почту', 400)
+
+    @staticmethod
+    def get_error_email_is_already_confirmed() -> Error:
+        return Error(-209, 'Вы уже подтвердили почту', 400)
 
 #     ==================================================================================
 #     Places errors
@@ -118,4 +126,15 @@ class AnswerService(BaseService):
 
     @staticmethod
     def get_error_menu_main_doesnt_exists() -> Error:
-        return Error(-310, 'Дааное меню не существует', 400)
+        return Error(-310, 'Данное меню не существует', 400)
+
+#     ==================================================================================
+#     Internal errors
+
+    @staticmethod
+    def get_unkmown_error() -> Error:
+        return Error(-401, 'Неизвестная ошибка сервера', 500)
+
+    @staticmethod
+    def get_error_not_found() -> Error:
+        return Error(-402, 'Объект не найден', 400)

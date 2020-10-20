@@ -4,6 +4,7 @@ from sanic.response import json
 
 from src.internal.biz.services.test_service import TestService
 from src.internal.servers.http.middlewares.auth import required_auth
+from src.internal.servers.http.middlewares.log import log_request
 
 test = Blueprint('test', url_prefix='')
 
@@ -25,6 +26,7 @@ async def truncate_tables(request: Request):
 
 
 @test.route('/accounts/auth/code', methods=['GET'])
+@log_request
 @required_auth
 async def get_code(request: Request, auth_account_main_id: int):
     auth_code = await TestService.get_auth_code(auth_account_main_id)

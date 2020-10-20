@@ -34,4 +34,6 @@ class Photo(AbstractModel):
     def create_full_url(self):
         if not self.__prefix_name:
             self.__prefix_name = BASE_S3_DOMEN
-        self.__full_url = self.__prefix_name + self.__short_url
+
+        if self.__short_url:
+            self.__full_url = self.__prefix_name + self.__short_url

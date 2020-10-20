@@ -46,7 +46,7 @@ class PlaceCuisineTypeDao(BaseDao):
                     cuisine_type_translate.name
                 FROM
                     place_cuisine_type
-                    INNER JOIN cuisine_type_translate ON (place_cuisine_type.cuisine_type_id = cuisine_type_translate.id AND cuisine_type_translate.language_id = $2)
+                    INNER JOIN cuisine_type_translate ON (place_cuisine_type.cuisine_type_id = cuisine_type_translate.cuisine_type_id AND cuisine_type_translate.language_id = $2)
                 WHERE
                     place_cuisine_type.place_main_id = ANY($1)
             """

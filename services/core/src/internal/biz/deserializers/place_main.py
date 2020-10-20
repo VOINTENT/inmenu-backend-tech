@@ -35,7 +35,8 @@ class PlaceMainDeserializer(BaseDeserializer):
     def _get_deserializer(cls, format_ser: str):
         if format_ser == DES_PLACE_MAIN_ADD:
             return cls._deserialize_add
-
+        elif format_ser == DES_PLACE_MAIN_FROM_DB_FULL:
+            return cls._deserialize_from_db_full
         else:
             raise TypeError
 
@@ -49,7 +50,7 @@ class PlaceMainDeserializer(BaseDeserializer):
             description=place_main['description'] if place_main.get('description') else None,
             main_currency=Currency(id=place_main.get('main_currency_id')),
             is_draft=place_main['extra']['is_draft'],
-            is_published=False
+            is_published=not place_main['extra']['is_draft']
         )
 
     @staticmethod

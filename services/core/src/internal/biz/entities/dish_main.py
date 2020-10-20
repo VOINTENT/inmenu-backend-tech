@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from src.internal.biz.entities.abstract_model import AbstractModel
+from src.internal.biz.entities.currency import Currency
 from src.internal.biz.entities.measure_unit import MeasureUnit
 from src.internal.biz.entities.menu_category import MenuCategory
 from src.internal.biz.entities.menu_main import MenuMain
@@ -17,7 +18,8 @@ class DishMain(AbstractModel):
                  description: Optional[str] = None,
                  menu_main: Optional[MenuMain] = None,
                  menu_category: Optional[MenuCategory] = None,
-                 measure_unit: Optional[MeasureUnit] = None) -> None:
+                 measure_unit: Optional[MeasureUnit] = None,
+                 currency: Optional[Currency] = None) -> None:
         super().__init__(id, created_at, edited_at)
         self.__name = name
         self.__photo = photo
@@ -25,6 +27,7 @@ class DishMain(AbstractModel):
         self.__menu_main = menu_main
         self.__menu_category = menu_category
         self.__measure_unit = measure_unit
+        self.__currency = currency
 
     @property
     def name(self) -> str:
@@ -49,3 +52,7 @@ class DishMain(AbstractModel):
     @property
     def measure_unit(self):
         return self.__measure_unit
+
+    @property
+    def currency(self):
+        return self.__currency

@@ -7,7 +7,8 @@ from src.internal.biz.entities.place_main import PlaceMain
 
 
 class MenuCategory(AbstractModel):
-    def __init__(self, id: Optional[int] = None,
+    def __init__(self,
+                 id: Optional[int] = None,
                  created_at: Optional[datetime] = None,
                  edited_at: Optional[datetime] = None,
                  menu_main: Optional[MenuMain] = None,

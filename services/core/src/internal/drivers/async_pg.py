@@ -14,7 +14,7 @@ class AsyncPg:
 
     @classmethod
     def get_pool_logs_db(cls) -> Pool:
-        return cls.__pool_primary_db
+        return cls.__pool_logs_db
 
     @classmethod
     def init_primary_db(cls, server_app: Sanic, host: str, user: str, password: str, port: int, database: str):

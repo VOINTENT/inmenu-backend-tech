@@ -13,6 +13,7 @@ class AccountMain(AbstractModel):
                  created_at: Optional[datetime] = None,
                  edited_at: Optional[datetime] = None,
                  email: Optional[str] = None,
+                 name: Optional[str] = None,
                  password: Optional[str] = None,
                  hash_password: Optional[str] = None,
                  auth_token: Optional[str] = None,
@@ -31,10 +32,19 @@ class AccountMain(AbstractModel):
         self.__is_confirmed = is_confirmed
         self.__is_active = is_active
         self.__is_email_sent = is_email_sent
+        self.__name = name
 
     @property
     def email(self) -> str:
         return self.__email
+
+    @email.setter
+    def email(self, value: str) -> None:
+        self.__email = value
+
+    @property
+    def name(self) -> str:
+        return self.__name
 
     @property
     def password(self) -> str:
@@ -90,9 +100,14 @@ class AccountMain(AbstractModel):
         self.__is_email_sent = value
 
     def create_hash_password(self):
-        if not self.password:
+        if not self.__password:
             return
-        self.hash_password = hashlib.sha512(bytes(self.password, 'utf-8')).hexdigest()
+        self.__hash_password = hashlib.sha512(bytes(self.__password, 'utf-8')).hexdigest()
+
+    def create_name_from_email(self):
+        if not self.__email:
+            return
+        self.__name = self.__email.split('@')[0]
 
     @staticmethod
     def _check(**kwargs):

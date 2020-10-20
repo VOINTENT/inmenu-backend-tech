@@ -26,6 +26,8 @@ class CoordsSchema(Schema):
 
 class LocationsSchema(Schema):
     full_address = fields.String(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
+    city = fields.String(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
+    country = fields.String(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
     coords = fields.Dict(fields.String, required=True, allow_none=False, validate=lambda value: CoordsSchema().load(value), error_messages={'required': ValidationErrorEnum.NOT_FIELD})
 
 

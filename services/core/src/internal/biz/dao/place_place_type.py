@@ -5,6 +5,9 @@ import asyncpg
 from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.base_dao import BaseDao
+from src.internal.biz.deserializers.place_place_type import PlacePlaceTypeDeserializer, \
+    DES_PLACE_PLACE_TYPE_FROM_DB_FULL
+from src.internal.biz.deserializers.place_type_deserializer import PLACE_TYPE_ID, PLACE_TYPE_NAME
 from src.internal.biz.entities.place_place_type import PlacePlaceType
 
 
@@ -35,3 +38,19 @@ class PlacePlaceTypeDao(BaseDao):
                     raise TypeError
 
         return None, None
+
+    async def get_by_place_main_id(self, place_main_id: int, lang_id: int) -> Tuple[Optional[List], Optional[Error]]:
+        async with self.pool.acquire() as conn:
+            rows = await conn.fetch(f"""
+                SELECT
+                    place_type.id               AS {PLACE_TYPE_ID},
+                    place_type_translate.name   AS {PLACE_TYPE_NAME}
+                FROM
+                    place_place_type
+                    INNER JOIN place_type ON place_place_type.place_type_id = place_type.id
+                    INNER JOIN place_type_translate ON place_type.id = place_type_translate.place_type_id AND place_type_translate.language_id = $2
+                WHERE
+                    place_main_id = $1
+            """, place_main_id, lang_id)
+
+            return [PlacePlaceTypeDeserializer.deserialize(row, DES_PLACE_PLACE_TYPE_FROM_DB_FULL) for row in rows], None

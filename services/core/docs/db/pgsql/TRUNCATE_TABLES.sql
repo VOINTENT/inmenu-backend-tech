@@ -8,7 +8,8 @@ TRUNCATE TABLE place_cuisine_type CASCADE;
 TRUNCATE TABLE place_work_hours CASCADE;
 TRUNCATE TABLE place_location CASCADE;
 TRUNCATE TABLE place_contacts CASCADE;
-TRUNCATE TABLE menu CASCADE;
+TRUNCATE TABLE menu_main CASCADE;
+TRUNCATE TABLE menu_category CASCADE;
 TRUNCATE TABLE place_account_role CASCADE;
 
 -- TRUNCATE TABLE account_status CASCADE;
@@ -18,5 +19,4 @@ TRUNCATE TABLE place_account_role CASCADE;
 -- TRUNCATE TABLE currency CASCADE;
 -- TRUNCATE TABLE place_type CASCADE;
 -- TRUNCATE TABLE cuisine_type CASCADE;
--- TRUNCATE TABLE service CASCADE;
 -- TRUNCATE TABLE service CASCADE;

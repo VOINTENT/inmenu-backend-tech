@@ -5,6 +5,9 @@ import asyncpg
 from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.base_dao import BaseDao
+from src.internal.biz.deserializers.menu_main import MENU_MAIN_ID, MENU_MAIN_NAME, MENU_MAIN, MenuMainDeserializer, \
+    DES_MENU_MAIN_FROM_DB_FULL
+from src.internal.biz.deserializers.photo import PHOTO_SHORT_URL
 from src.internal.biz.entities.menu_main import MenuMain
 
 
@@ -31,8 +34,23 @@ class MenuMainDao(BaseDao):
                 return None, ErrorEnum.PLACE_DOESNT_EXISTS
             else:
                 raise TypeError
-        except Exception as exc:
-            raise TypeError
 
         menu_main.id = menu_id
         return menu_main, None
+
+    async def get_by_place_main_id(self, place_main_id: int, pagination_size: int, pagination_after: int):
+        async with self.pool.acquire() as conn:
+            rows = await conn.fetch(f"""
+                SELECT
+                    menu_main.id AS {MENU_MAIN_ID},
+                    menu_main.name AS {MENU_MAIN_NAME},
+                    menu_main.photo_link AS {MENU_MAIN + PHOTO_SHORT_URL}
+                FROM
+                    menu_main
+                    INNER JOIN place_main ON menu_main.place_main_id = place_main.id
+                WHERE
+                    place_main.id = $1
+                LIMIT $2 OFFSET $3
+            """, place_main_id, pagination_size, pagination_after)
+
+            return [MenuMainDeserializer.deserialize(row, DES_MENU_MAIN_FROM_DB_FULL) for row in rows], None

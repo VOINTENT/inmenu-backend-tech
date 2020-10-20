@@ -17,7 +17,8 @@ class PlaceCommon:
                  place_places_types: Optional[List[PlacePlaceType]] = None,
                  place_services: Optional[List[PlaceService]] = None,
                  place_locations: Optional[List[PlaceLocation]] = None,
-                 place_work_hours: Optional[List[PlaceWorkHours]] = None) -> None:
+                 place_work_hours: Optional[List[PlaceWorkHours]] = None,
+                 place_location: Optional[PlaceLocation] = None) -> None:
         self.__place_main = place_main
         self.__place_cuisine_types = place_cuisine_types
         self.__place_contacts = place_contacts
@@ -25,6 +26,7 @@ class PlaceCommon:
         self.__place_services = place_services
         self.__place_locations = place_locations
         self.__place_work_hours = place_work_hours
+        self.__place_location = place_location
 
     @property
     def place_main(self) -> Optional[PlaceMain]:
@@ -46,9 +48,17 @@ class PlaceCommon:
     def place_places_types(self) -> Optional[List[PlacePlaceType]]:
         return self.__place_places_types
 
+    @place_places_types.setter
+    def place_places_types(self, value: List[PlacePlaceType]):
+        self.__place_places_types = value
+
     @property
     def place_services(self) -> Optional[List[PlaceService]]:
         return self.__place_services
+
+    @place_services.setter
+    def place_services(self, value: List[PlaceService]) -> None:
+        self.__place_services = value
 
     @property
     def place_locations(self) -> Optional[List[PlaceLocation]]:
@@ -57,3 +67,7 @@ class PlaceCommon:
     @property
     def place_work_hours(self) -> Optional[List[PlaceWorkHours]]:
         return self.__place_work_hours
+
+    @property
+    def place_location(self) -> PlaceLocation:
+        return self.__place_location

@@ -32,7 +32,8 @@ class Mail:
         msg['To'] = address
         msg['Subject'] = MailTextsEnum.SUBJECT_EMAIL_CODE
 
-        msg.attach(MIMEText(message, EMAIL_CODE_CONTENT_TYPE))
+        message_body = MailTextsEnum.BODY_EMAIL_CODE + message
+        msg.attach(MIMEText(message_body, EMAIL_CODE_CONTENT_TYPE))
 
         try:
             server = smtplib.SMTP(f'{HOST}: {PORT}')

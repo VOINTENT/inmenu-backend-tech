@@ -1,6 +1,8 @@
+import math
 from datetime import datetime
 from random import choice
 from string import digits
+from typing import List
 
 
 def get_datetime_diff(datetime1: datetime, datetime2: datetime) -> float:
@@ -18,3 +20,7 @@ def get_passed_time(last_datetime: datetime) -> float:
 
 def get_random_code(length=6) -> str:
     return ''.join(choice(digits) for _ in range(length))
+
+
+def get_radius(center_point: List[float], radius_point: List[float]):
+    return math.hypot(radius_point[0] - center_point[0], radius_point[1] - center_point[1])

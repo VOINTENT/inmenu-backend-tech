@@ -66,6 +66,10 @@ class ErrorEnum:
         return AnswerService.get_error_email_is_not_confirmed()
 
     @classproperty
+    def EMAIL_IS_ALREADY_CONFIRMED(cls) -> Error:
+        return AnswerService.get_error_email_is_already_confirmed()
+
+    @classproperty
     def PLACE_DOESNT_EXISTS(cls) -> Error:
         return AnswerService.get_error_place_doesnt_exists()
 
@@ -84,3 +88,11 @@ class ErrorEnum:
     @classproperty
     def MENU_MAIN_DOESNT_EXISTS(cls) -> Error:
         return AnswerService.get_error_menu_main_doesnt_exists()
+
+    @classproperty
+    def UNKNOWN_ERROR(cls) -> Error:
+        return AnswerService.get_unkmown_error()
+
+    @classproperty
+    def NOT_FOUND(cls) -> Error:
+        return AnswerService.get_error_not_found()

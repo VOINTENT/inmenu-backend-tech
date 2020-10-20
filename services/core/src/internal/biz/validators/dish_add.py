@@ -16,4 +16,4 @@ class DishCommonAddSchema(Schema):
     menu_id = fields.Integer(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
     category_id = fields.Integer(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
     measure_unit_id = fields.Integer(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
-    measures = fields.List(fields.Nested(MeasureSchema), required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
+    measures = fields.List(fields.Nested(MeasureSchema), required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD}, validate=Length(min=1))

@@ -1,10 +1,15 @@
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 import asyncpg
 
 from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.base_dao import BaseDao
+from src.internal.biz.deserializers.currency import CURRENCY_SIGN
+from src.internal.biz.deserializers.dish_main import DISH_MAIN_NAME, DISH_MAIN, DishMainDeserializer, \
+    DES_DISH_MAIN_FROM_DB_FULL, DISH_MAIN_ID
+from src.internal.biz.deserializers.measure_unit import MEASURE_UNIT_SHORT_NAME
+from src.internal.biz.deserializers.photo import PHOTO_SHORT_URL
 from src.internal.biz.entities.dish_main import DishMain
 
 
@@ -36,3 +41,26 @@ class DishMainDao(BaseDao):
 
         dish_main.id = dish_main_id
         return dish_main, None
+
+    async def get_by_menu_category_id(self, menu_category_id: int, pagination_size: int, pagination_after: int) -> Tuple[Optional[List[DishMain]], Optional[Error]]:
+        async with self.pool.acquire() as conn:
+            rows = await conn.fetch(f"""
+                SELECT
+                    dish_main.id                AS {DISH_MAIN_ID},
+                    dish_main.name              AS {DISH_MAIN_NAME},
+                    dish_main.photo_link        AS {DISH_MAIN + PHOTO_SHORT_URL},
+                    measure_unit.short_name     AS {DISH_MAIN + MEASURE_UNIT_SHORT_NAME},
+                    currency.sign               AS {DISH_MAIN + CURRENCY_SIGN}
+                FROM
+                    dish_main
+                    INNER JOIN measure_unit ON dish_main.measure_unit_id = measure_unit.id
+                    INNER JOIN menu_category ON dish_main.menu_category_id = menu_category.id
+                    INNER JOIN menu_main ON menu_category.menu_main_id = menu_main.id
+                    INNER JOIN place_main ON menu_main.place_main_id = place_main.id
+                    INNER JOIN currency ON place_main.main_currency = currency.id
+                WHERE
+                    dish_main.menu_category_id = $1
+                LIMIT $2 OFFSET $3
+            """, menu_category_id, pagination_size, pagination_after)
+
+            return [DishMainDeserializer.deserialize(row, DES_DISH_MAIN_FROM_DB_FULL) for row in rows], None

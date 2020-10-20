@@ -7,3 +7,7 @@ class MailTextsEnum:
     @classproperty
     def SUBJECT_EMAIL_CODE(cls):
         return StaticDataService.get_email_code_subject()
+
+    @classproperty
+    def BODY_EMAIL_CODE(cls):
+        return StaticDataService.get_email_code_body()
