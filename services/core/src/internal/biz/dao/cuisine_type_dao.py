@@ -1,3 +1,6 @@
+from typing import Optional, List, Tuple
+
+from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.biz.entities.cuisine_type import CuisineType
@@ -5,7 +8,7 @@ from src.internal.biz.entities.cuisine_type import CuisineType
 
 class CuisineTypeDao(BaseDao):
 
-    async def get_list_cuisine_type(self, pagination_size: int, pagination_after: int, lang_id: int):
+    async def get_list_cuisine_type(self, pagination_size: int, pagination_after: int, lang_id: int) -> Tuple[Optional[List[CuisineType]], Optional[Error]]:
         sql = """
             SELECT 
                 cuisine_type_translate.cuisine_type_id  AS cuisine_type_translate_cuisine_type_id,
@@ -17,10 +20,10 @@ class CuisineTypeDao(BaseDao):
             OFFSET $3
             """
         if self.conn:
-            data = await self.conn.fetchval(sql, lang_id, pagination_size, pagination_after)
+            data = await self.conn.fetch(sql, lang_id, pagination_size, pagination_after)
         else:
             async with self.pool.acquire() as conn:
-                data = await conn.fetchval(sql, lang_id, pagination_size, pagination_after)
+                data = await conn.fetch(sql, lang_id, pagination_size, pagination_after)
         if not data:
             return None, ErrorEnum.CUISINE_TYPE_DOESNT_EXISTS
         cuisine_type = [CuisineType(

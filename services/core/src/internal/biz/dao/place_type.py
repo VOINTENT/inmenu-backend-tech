@@ -25,10 +25,10 @@ class PlaceTypeDao(BaseDao):
             OFFSET $3
             """
         if self.conn:
-            data = await self.conn.fetchval(sql, lang_id, pagination_size, pagination_after)
+            data = await self.conn.fetch(sql, lang_id, pagination_size, pagination_after)
         else:
             async with self.pool.acquire() as conn:
-                data = await conn.fetchval(sql, lang_id, pagination_size, pagination_after)
+                data = await conn.fetch(sql, lang_id, pagination_size, pagination_after)
         if not data:
             return None, ErrorEnum.PLACE_TYPE_DOESNT_EXISTS
         place_types = [PlaceType(

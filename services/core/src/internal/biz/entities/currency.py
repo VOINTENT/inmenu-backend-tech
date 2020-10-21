@@ -13,7 +13,7 @@ class Currency(AbstractModel):
                  short_name: Optional[str] = None,
                  sign: Optional[str] = None) -> None:
         super().__init__(id, created_at, edited_at)
-        self.__class__._check(name=name, sign=sign)
+        self.__class__._check(name=name, sign=sign, short_name=short_name)
         self.__name = name
         self.__sign = sign
         self.__short_name = short_name

@@ -13,7 +13,7 @@ work_hours = Blueprint('work_hours', url_prefix='/work_hours')
 
 @work_hours.route('', methods=['GET'])
 async def get_work_hours(request: Request):
-    work_hours, err = WorkHoursService.get_list_work_hours()
+    work_hours, err = await WorkHoursService.get_list_work_hours()
     if err:
         return err.get_response_with_error()
 

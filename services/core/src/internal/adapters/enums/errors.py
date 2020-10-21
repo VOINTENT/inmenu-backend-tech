@@ -117,3 +117,18 @@ class ErrorEnum:
     def MENU_COMMON_DOESNT_EXISTS(cls) -> Error:
         return AnswerService.get_error_menu_common_doesnt_exists()
 
+    @classproperty
+    def CUISINE_TYPE_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_cuisine_type_doesnt_exists()
+
+    @classproperty
+    def PLACE_TYPE_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_place_type_doesnt_exists()
+
+    @classproperty
+    def SERVICES_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_services_doesnt_exists()
+
+    @classproperty
+    def WORK_HOURS_DOESNT_EXISTS(cls) -> Error:
+        return AnswerService.get_error_work_hours_doesnt_exists()

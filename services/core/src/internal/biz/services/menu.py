@@ -120,7 +120,7 @@ class MenuService(BaseService):
         menu_main, error_menu_main = await MenuMainDao().get_menu_main_by_id(menu_id)
         if error_menu_main:
             return None, error_menu_main
-
+        print(menu_main.place_main.id)
         language, error_language = await LanguageDao().get_language_by_menu_id(menu_main.place_main.id)
         if error_language:
             return None, error_language

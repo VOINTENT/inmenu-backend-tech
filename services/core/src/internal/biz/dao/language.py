@@ -50,7 +50,7 @@ class LanguageDao(BaseDao):
             INNER JOIN 
                 place_main ON place_main.main_language = language.id
             WHERE
-                place_main.main_language = &1
+                place_main.main_language = $1
                 """
         if self.conn:
             data = await self.conn.fetchrow(sql, place_main_id)

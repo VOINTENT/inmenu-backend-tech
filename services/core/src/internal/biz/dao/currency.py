@@ -20,7 +20,7 @@ class CurrencyDao(BaseDao):
         INNER JOIN
             place_main ON place_main.main_currency = currency.id
         WHERE
-            place_main.main_currency = &1
+            place_main.main_currency = $1
             """
         if self.conn:
             data = await self.conn.fetchrow(sql, place_main_id)
@@ -29,25 +29,29 @@ class CurrencyDao(BaseDao):
                 data = await conn.fetchrow(sql, place_main_id)
         if not data:
             return None, ErrorEnum.CURRENCY_DOESNT_EXISTS
+        print(data)
         currency = currency_serializer(data)
         return currency, None
 
-    async def get_currency_type(self, pagination_size, pagination_after, lang_id) -> Tuple[Optional[List[Currency]], Optional[Error]]:
+    async def get_currency_type(self, pagination_size: int, pagination_after: int, lang_id: int) -> Tuple[Optional[List[Currency]], Optional[Error]]:
         sql = """
             SELECT 
-                currency.id             AS currency_id,
-                currency.name           AS currency_name, 
-                currency.short_name     AS currency.short_name
+                currency_translate.id             AS currency_id,
+                currency_translate.name           AS currency_name, 
+                currency.sign                     AS currency_sign
             FROM
-                currency
-            LIMIT $1
-            OFFSET &2
+                currency_translate
+            INNER JOIN
+                currency ON currency.id = currency_translate.currency_id
+            WHERE currency_translate.language_id = $1
+            LIMIT $2
+            OFFSET $3
         """
         if self.conn:
-            data = await self.conn.fetchrow(sql, pagination_size, pagination_after)
+            data = await self.conn.fetch(sql, lang_id, pagination_size, pagination_after)
         else:
             async with self.pool.acquire() as conn:
-                data = await conn.fetchrow(sql)
+                data = await conn.fetch(sql, lang_id, pagination_size, pagination_after)
         if not data:
             return None, ErrorEnum.CURRENCY_DOESNT_EXISTS
         currency = currency_serializer(data)
