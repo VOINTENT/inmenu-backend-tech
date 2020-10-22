@@ -4,7 +4,7 @@ from src.internal.biz.entities.menu_category import MenuCategory
 from src.internal.biz.entities.menu_main import MenuMain
 
 
-def menu_category_serializer(data: re) -> Optional[List[MenuCategory]]:
+def menu_category_serializer(data) -> Optional[List[MenuCategory]]:
     try:
         menu_categories = [
             MenuCategory(

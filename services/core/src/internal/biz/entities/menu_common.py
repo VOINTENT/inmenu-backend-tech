@@ -7,7 +7,6 @@ from src.internal.biz.entities.language import Language
 from src.internal.biz.entities.menu_main import MenuMain
 from src.internal.biz.entities.currency import Currency
 from src.internal.biz.entities.measure_unit import MeasureUnit
-from src.internal.biz.entities.count_dishes import CountDishes
 
 
 class MenuCommon:

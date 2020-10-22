@@ -3,7 +3,7 @@ from typing import re, List, Optional
 from src.internal.biz.entities.measure_unit import MeasureUnit
 
 
-def measure_unit_serializer(data: re) -> Optional[List[MeasureUnit]]:
+def measure_unit_serializer(data) -> Optional[List[MeasureUnit]]:
     try:
         return [MeasureUnit(
             id=data[i]['measure_unit_id'],

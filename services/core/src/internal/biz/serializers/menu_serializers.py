@@ -32,18 +32,18 @@ class MenuSerializer(BaseSerializer):
         data = {
             'menu_category_id': category.id,
             'menu_category_name': category.name,
-            'dishes': [MenuSerializer.dishes(i, menu_common) for i in menu_common.dish_main if i.menu_category.id == category.id]
+            'dishes': [MenuSerializer.dishes(dish_main, menu_common) for dish_main in menu_common.dish_main if dish_main.menu_category.id == category.id]
         }
         return data
 
     @staticmethod
-    def dishes(i, menu_common):
+    def dishes(dish_main, menu_common):
         data = {
-            'measure_unit_id': i.measure_unit.id,
-            'measure_unit_name': menu_common.measure_unit[i.measure_unit.id - 1].short_name,
-            'dish_main_id': i.id,
-            'dish_main_name': i.name,
-            'dish_main_photo': i.photo,
-            'dish_main_description': i.description
+            'measure_unit_id': dish_main.measure_unit.id,
+            'measure_unit_name': menu_common.measure_unit[dish_main.measure_unit.id - 1].short_name,
+            'dish_main_id': dish_main.id,
+            'dish_main_name': dish_main.name,
+            'dish_main_photo': dish_main.photo,
+            'dish_main_description': dish_main.description
         }
         return data

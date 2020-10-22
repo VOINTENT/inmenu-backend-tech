@@ -4,7 +4,7 @@ from src.internal.biz.entities.dish_main import DishMain
 from src.internal.biz.entities.dish_measure import DishMeasure
 
 
-def dish_measure_serializer(data: re) -> Optional[List[DishMeasure]]:
+def dish_measure_serializer(data) -> Optional[List[DishMeasure]]:
     try:
         dish_measures = [
             DishMeasure(

@@ -6,7 +6,7 @@ from src.internal.biz.entities.menu_category import MenuCategory
 from src.internal.biz.entities.menu_main import MenuMain
 
 
-def dishes_main_serializer(data: re) -> Optional[List[DishMain]]:
+def dishes_main_serializer(data) -> Optional[List[DishMain]]:
     try:
         dishes_main = [
             DishMain(

@@ -3,7 +3,7 @@ from typing import re, Optional, List
 from src.internal.biz.entities.place_work_hours import PlaceWorkHours
 
 
-def work_hours_serializer(data: re) -> Optional[List[PlaceWorkHours]]:
+def work_hours_serializer(data) -> Optional[List[PlaceWorkHours]]:
     try:
         work_hours = [PlaceWorkHours(
             id=data[i]['place_work_hours_id'],

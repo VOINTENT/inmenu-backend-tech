@@ -4,7 +4,7 @@ from src.internal.biz.entities.menu_main import MenuMain
 from src.internal.biz.entities.place_main import PlaceMain
 
 
-def menu_main_serializer(data: re) -> Optional[MenuMain]:
+def menu_main_serializer(data) -> Optional[MenuMain]:
     try:
         menu_main = MenuMain(
             id=data['menu_main_id'],
