@@ -29,11 +29,8 @@ class ServicesDao(BaseDao):
                 data = await conn.fetch(sql, lang_id, pagination_size, pagination_after)
 
         if not data:
-            return None, ErrorEnum.SERVICES_DOESNT_EXISTS
+            return [], None
 
-        services = service_serializer(data)
-
-        if not services:
-            return None, ErrorEnum.SERVICES_DOESNT_EXISTS
+        services = [service_serializer(dictionary) for dictionary in data]
 
         return services, None

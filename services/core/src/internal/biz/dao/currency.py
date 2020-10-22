@@ -35,13 +35,13 @@ class CurrencyDao(BaseDao):
     async def get_currency_type(self, pagination_size: int, pagination_after: int, lang_id: int) -> Tuple[Optional[List[Currency]], Optional[Error]]:
         sql = """
             SELECT 
-                currency_translate.id             AS currency_id,
-                currency_translate.name           AS currency_name, 
-                currency.sign                     AS currency_sign
+                currency.id                AS currency_id,
+                currency_translate.name    AS currency_translate_name, 
+                currency.sign              AS currency_sign
             FROM
-                currency_translate
+                currency
             INNER JOIN
-                currency ON currency.id = currency_translate.currency_id
+                currency_translate ON currency.id = currency_translate.currency_id
             WHERE currency_translate.language_id = $1
             LIMIT $2
             OFFSET $3
@@ -51,9 +51,10 @@ class CurrencyDao(BaseDao):
         else:
             async with self.pool.acquire() as conn:
                 data = await conn.fetch(sql, lang_id, pagination_size, pagination_after)
+
         if not data:
-            return None, ErrorEnum.CURRENCY_DOESNT_EXISTS
-        currency = currency_serializer(data)
-        if not currency:
-            return None, ErrorEnum.CURRENCY_DOESNT_EXISTS
-        return currency, None
+            return [], None
+
+        currencies = [currency_serializer(dictionary) for dictionary in data]
+
+        return currencies, None

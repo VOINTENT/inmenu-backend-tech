@@ -85,8 +85,7 @@ class MenuService(BaseService):
         return place_categories, None
 
     @staticmethod
-    async def get_menu_categories_by_menu_category_id(menu_main_id: int) -> Tuple[
-        Optional[List[MenuCategory]], Optional[Error]]:
+    async def get_menu_categories_by_menu_category_id(menu_main_id: int) -> Tuple[Optional[List[MenuCategory]], Optional[Error]]:
         menu_categories, err = await MenuCategoryDao().get_by_menu_main_id(menu_main_id)
         if err:
             return None, err
@@ -94,8 +93,7 @@ class MenuService(BaseService):
         return menu_categories, None
 
     @staticmethod
-    async def get_dishes_by_menu_category_id(menu_category_id, pagination_size: int, pagination_after: int) -> Tuple[
-        Optional[List[DishCommon]], Optional[Error]]:
+    async def get_dishes_by_menu_category_id(menu_category_id, pagination_size: int, pagination_after: int) -> Tuple[Optional[List[DishCommon]], Optional[Error]]:
         dish_mains, err = await DishMainDao().get_by_menu_category_id(menu_category_id, pagination_size,
                                                                       pagination_after)
         if err:

@@ -74,7 +74,7 @@ class DishMeasureDao(BaseDao):
         if not data:
             return ErrorEnum.DISH_MEASURE_VALUE_AND_PRICE_DOESNT_EXISTS
 
-        dish_measures = dish_measure_serializer(data)
+        dish_measures = [dish_measure_serializer(dictionary) for dictionary in data]
 
         if not dish_measures:
             return None, ErrorEnum.DISH_MEASURE_VALUE_AND_PRICE_DOESNT_EXISTS

@@ -11,4 +11,5 @@ class PlaceTypeService(BaseService):
                                                                       lang_id)
         if error_place_types:
             return None, error_place_types
+
         return place_types, None

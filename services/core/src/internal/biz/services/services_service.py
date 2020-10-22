@@ -11,6 +11,8 @@ class ServicesService(BaseService):
     @staticmethod
     async def get_services(pagination_size: int, pagination_after: int, lang_id: int) -> Tuple[Optional[List[Service]], Optional[Error]]:
         services, error_services = await ServicesDao().get_service(pagination_size, pagination_after, lang_id)
+
         if error_services:
             return None, error_services
+
         return services, None

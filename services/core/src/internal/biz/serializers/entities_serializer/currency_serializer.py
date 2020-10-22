@@ -1,17 +1,19 @@
-from typing import re, Optional, List
+from typing import Optional, List
 
 from src.internal.biz.entities.currency import Currency
 
 
-def currency_serializer(data) -> Optional[List[Currency]] or Optional[Currency]:
+def currency_serializer(dictionary: dict) -> Optional[Currency]:
     try:
-        return [Currency(
-            id=data[i]['currency_id'],
-            name=data[i]['currency_name'],
-            sign=data[i]['currency_short_name']
-        )for i in range(len(data))]
-    except:
         return Currency(
-            id=data['currency_id'],
-            sign=data['currency_sign']
-        )
+            id=dictionary['currency_id'],
+            name=dictionary['currency_translate_name'],
+            sign=dictionary['currency_sign'])
+    except:
+        try:
+            return Currency(
+                id=dictionary['currency_id'],
+                sign=dictionary['currency_sign']
+            )
+        except:
+            raise TypeError

@@ -71,7 +71,7 @@ def test_correct_init_dish_measures():
 
     assert menu_common.dish_measures[0].id == id
     assert menu_common.dish_measures[0].dish_main.id == dish_main.id
-    assert menu_common.dish_measures[0].dish_main.id == dish_main.name
+    assert menu_common.dish_measures[0].dish_main.name == dish_main.name
     assert menu_common.dish_measures[0].price_value == price_value
     assert menu_common.dish_measures[0].measure_value == measure_value
 
@@ -79,13 +79,13 @@ def test_correct_init_dish_measures():
 def test_correct_init_currency():
     id = 1
     name = 'name'
-    short_name = 'short_name'
+    short_nam = 'short_name'
     sign = 'sign'
 
     currency = Currency(
         id=id,
         name=name,
-        short_name=short_name,
+        short_name=short_nam,
         sign=sign
     )
 
@@ -93,7 +93,8 @@ def test_correct_init_currency():
 
     assert menu_common.currency.id == id
     assert menu_common.currency.name == name
-    assert menu_common.currency.short_name == short_name
+    assert menu_common.currency.short_name is not None
+    assert currency.short_name() == short_nam
     assert menu_common.currency.sign == sign
 
 

@@ -1,4 +1,4 @@
-from typing import re, Optional
+from typing import Optional
 
 from src.internal.biz.entities.menu_main import MenuMain
 from src.internal.biz.entities.place_main import PlaceMain

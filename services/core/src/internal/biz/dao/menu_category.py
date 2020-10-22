@@ -61,7 +61,7 @@ class MenuCategoryDao(BaseDao):
         if not data:
             return None, ErrorEnum.MENU_CATEGORY_DOESNT_EXISTS
 
-        menu_categories = menu_category_serializer(data)
+        menu_categories = [menu_category_serializer(dictionary) for dictionary in data]
 
         if not menu_categories:
             return None, ErrorEnum.MENU_CATEGORY_DOESNT_EXISTS

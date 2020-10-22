@@ -92,7 +92,7 @@ class DishMainDao(BaseDao):
         if not data:
             return None, ErrorEnum.DISHES_DOESNT_EXISTS
 
-        dishes_main = dishes_main_serializer(data)
+        dishes_main = [dishes_main_serializer(dictionary) for dictionary in data]
 
         if not dishes_main:
             return None, ErrorEnum.DISHES_DOESNT_EXISTS

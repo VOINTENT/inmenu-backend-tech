@@ -7,6 +7,7 @@ from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.biz.entities.place_type import PlaceType
+from src.internal.biz.serializers.entities_serializer.place_type_serializer import place_type_serializer
 
 
 class PlaceTypeDao(BaseDao):
@@ -17,9 +18,9 @@ class PlaceTypeDao(BaseDao):
                 place_type.id                  AS place_type_id,
                 place_type_translate.name      AS place_type_translate_name
             FROM
-                place_type_translate
+                place_type
             INNER JOIN
-                place_type ON place_type.id = place_type_translate.place_type_id
+                place_type_translate ON place_type.id = place_type_translate.place_type_id
             WHERE place_type_translate.language_id = $1
             LIMIT $2
             OFFSET $3
@@ -29,10 +30,10 @@ class PlaceTypeDao(BaseDao):
         else:
             async with self.pool.acquire() as conn:
                 data = await conn.fetch(sql, lang_id, pagination_size, pagination_after)
+
         if not data:
-            return None, ErrorEnum.PLACE_TYPE_DOESNT_EXISTS
-        place_types = [PlaceType(
-            id=data[i]['place_type_id'],
-            name=data[i]['place_type_translate_name']
-        ) for i in range(len(data))]
+            return [], None
+
+        place_types = [place_type_serializer(dictionary) for dictionary in data]
+
         return place_types, None

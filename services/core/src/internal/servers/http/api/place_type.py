@@ -14,7 +14,6 @@ place_types = Blueprint('place_types', url_prefix='/place_types')
 @get_pagination_params
 @get_lang_id
 async def get_place_types(request: Request, pagination_size: int, pagination_after: int, lang_id: int):
-    print('hello')
     place_type, err = await PlaceTypeService.get_all_place_types(pagination_size, pagination_after, lang_id)
     if err:
         return err.get_response_with_error()

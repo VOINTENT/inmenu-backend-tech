@@ -3,11 +3,11 @@ from typing import re, Optional, List
 from src.internal.biz.entities.service import Service
 
 
-def service_serializer(data) -> Optional[List[Service]]:
+def service_serializer(dictionary: dict) -> Optional[Service]:
     try:
-        return [Service(
-            id=data[i]['service_id'],
-            name=data[i]['service_translate_name']
-        ) for i in range(len(data))]
+        return Service(
+            id=dictionary['service_id'],
+            name=dictionary['service_translate_name']
+        )
     except:
         raise TypeError

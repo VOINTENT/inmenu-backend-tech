@@ -28,7 +28,7 @@ class MeasureUnitDao(BaseDao):
         if not data:
             return None, ErrorEnum.MEASURE_UNIT_DOESNT_EXISTS
 
-        measure_units = measure_unit_serializer(data)
+        measure_units = [measure_unit_serializer(dictionary) for dictionary in data]
 
         if not measure_units:
             return None, ErrorEnum.MEASURE_UNIT_DOESNT_EXISTS
@@ -38,13 +38,13 @@ class MeasureUnitDao(BaseDao):
     async def get_measure_units(self, pagination_size: int, pagination_after: int, lang_id: int) -> Tuple[Optional[List[MeasureUnit]], Optional[Error]]:
         sql = """
             SELECT
-                measure_unit.id         AS measure_unit_id,
-                measure_unit_translate.name AS measure_unit_name, 
-                measure_unit_translate.short_name AS measure_unit_short_name
+                measure_unit.id                     AS measure_unit_id,
+                measure_unit_translate.name         AS measure_unit_name, 
+                measure_unit_translate.short_name   AS measure_unit_short_name
             FROM
-                measure_unit_translate
+                measure_unit
             INNER JOIN
-                measure_unit ON measure_unit.id = measure_unit_translate.measure_unit_id
+                measure_unit_translate ON measure_unit.id = measure_unit_translate.measure_unit_id
             WHERE measure_unit_translate.language_id = $1
             LIMIT $2
             OFFSET $3
@@ -56,11 +56,8 @@ class MeasureUnitDao(BaseDao):
                 data = await conn.fetch(sql, lang_id, pagination_size, pagination_after)
 
         if not data:
-            return None, ErrorEnum.MEASURE_UNIT_DOESNT_EXISTS
+            return [], None
 
-        measure_units = measure_unit_serializer(data)
-
-        if not measure_units:
-            return None, ErrorEnum.MEASURE_UNIT_DOESNT_EXISTS
+        measure_units = [measure_unit_serializer(dictionary) for dictionary in data]
 
         return measure_units, None
