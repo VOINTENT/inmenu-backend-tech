@@ -20,7 +20,7 @@ class CurrencyDao(BaseDao):
         INNER JOIN
             place_main ON place_main.main_currency = currency.id
         WHERE
-            place_main.main_currency = $1
+            place_main.id = $1
             """
         if self.conn:
             data = await self.conn.fetchrow(sql, place_main_id)
@@ -29,7 +29,6 @@ class CurrencyDao(BaseDao):
                 data = await conn.fetchrow(sql, place_main_id)
         if not data:
             return None, ErrorEnum.CURRENCY_DOESNT_EXISTS
-        print(data)
         currency = currency_serializer(data)
         return currency, None
 
