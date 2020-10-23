@@ -39,32 +39,3 @@ class LanguageDao(BaseDao):
                 LIMIT $1 OFFSET $2
             """, pagination_size, pagination_after)
             return [LanguageDeserializer.deserialize(row, DES_LANGUAGE_FROM_DB_FULL) for row in rows], None
-
-    async def get_language_by_menu_id(self, place_main_id: int) -> Tuple[Optional[Language], Optional[Error]]:
-        sql = """
-            SELECT 
-                language.id 			            AS language_id,
-                language.name 			            AS language_name
-            FROM 
-                language
-            INNER JOIN 
-                place_main ON place_main.main_language = language.id
-            WHERE
-                place_main.main_language = $1
-                """
-        if self.conn:
-            data = await self.conn.fetchrow(sql, place_main_id)
-        else:
-            async with self.pool.acquire() as conn:
-                data = await conn.fetchrow(sql, place_main_id)
-
-        if not data:
-            return None, ErrorEnum.LANGUAGE_DOESNT_EXISTS
-
-        language = language_serializer(data)
-
-        if not language:
-            return None, ErrorEnum.LANGUAGE_DOESNT_EXISTS
-
-        return language, None
-

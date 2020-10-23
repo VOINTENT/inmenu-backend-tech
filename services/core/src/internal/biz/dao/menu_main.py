@@ -57,33 +57,3 @@ class MenuMainDao(BaseDao):
             """, place_main_id, pagination_size, pagination_after)
 
             return [MenuMainDeserializer.deserialize(row, DES_MENU_MAIN_FROM_DB_FULL) for row in rows], None
-
-    async def get_menu_main_by_id(self, menu_id: int) -> Tuple[Optional[MenuMain], Optional[Error]]:
-        sql = """
-            SELECT
-                menu_main.id 						AS menu_main_id,
-                menu_main.name 						AS menu_main_name,
-                menu_main.photo_link 				AS menu_main_photo_link,
-                menu_main.place_main_id				AS menu_main_place_main_id
-            FROM 
-                menu_main
-            WHERE 
-                menu_main.id = $1
-                               """
-
-        if self.conn:
-            data = await self.conn.fetchrow(sql, menu_id)
-        else:
-            async with self.pool.acquire() as conn:
-                data = await conn.fetchrow(sql, menu_id)
-
-        if not data:
-            return None, ErrorEnum.MENU_MAIN_DOESNT_EXISTS
-
-        menu_main = menu_main_serializer(data)
-
-        if not menu_main:
-            return None, ErrorEnum.MENU_MAIN_DOESNT_EXISTS
-
-        return menu_main, None
-

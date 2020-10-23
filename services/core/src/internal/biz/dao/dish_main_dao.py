@@ -67,35 +67,3 @@ class DishMainDao(BaseDao):
             """, menu_category_id, pagination_size, pagination_after)
 
             return [DishMainDeserializer.deserialize(row, DES_DISH_MAIN_FROM_DB_FULL) for row in rows], None
-
-    async def get(self, menu_id: int) -> Tuple[Optional[List[DishMain]], Optional[Error]]:
-        sql = """
-            SELECT 
-                dish_main.id                        AS dish_main_id,
-                dish_main.name                      AS dish_main_name,
-                dish_main.photo_link                AS dish_main_photo_link,
-                dish_main.description               AS dish_main_description,
-                dish_main.menu_main_id				AS dish_main_menu_main_id,
-                dish_main.menu_category_id			AS dish_main_menu_category_id,
-                dish_main.measure_unit_id			AS dish_main_measure_unit_id
-            FROM 	
-                dish_main
-            WHERE 
-                dish_main.menu_main_id = $1
-                """
-        if self.conn:
-            data = await self.conn.fetch(sql, menu_id)
-        else:
-            async with self.pool.acquire() as conn:
-                data = await conn.fetch(sql, menu_id)
-
-        if not data:
-            return None, ErrorEnum.DISHES_DOESNT_EXISTS
-
-        dishes_main = [dishes_main_serializer(dictionary) for dictionary in data]
-
-        if not dishes_main:
-            return None, ErrorEnum.DISHES_DOESNT_EXISTS
-
-        return dishes_main, None
-

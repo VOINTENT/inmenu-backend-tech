@@ -40,30 +40,3 @@ class MenuCategoryDao(BaseDao):
             """, menu_main_id)
 
             return [MenuCategoryDeserializer.deserialize(row, DES_MENU_CATEGORY_FROM_DB_FULL) for row in rows], None
-
-    async def get(self, menu_id: int) -> Tuple[Optional[List[MenuCategory]], Optional[Error]]:
-        sql = """
-            SELECT 
-                menu_category.id                    AS menu_category_id,
-                menu_category.name                  AS menu_category_name,
-                menu_category.menu_main_id          AS menu_category_menu_main_id
-            FROM 
-                menu_category
-            WHERE
-                menu_category.menu_main_id = $1
-            """
-        if self.conn:
-            data = await self.conn.fetch(sql, menu_id)
-        else:
-            async with self.pool.acquire() as conn:
-                data = await conn.fetch(sql, menu_id)
-
-        if not data:
-            return None, ErrorEnum.MENU_CATEGORY_DOESNT_EXISTS
-
-        menu_categories = [menu_category_serializer(dictionary) for dictionary in data]
-
-        if not menu_categories:
-            return None, ErrorEnum.MENU_CATEGORY_DOESNT_EXISTS
-
-        return menu_categories, None

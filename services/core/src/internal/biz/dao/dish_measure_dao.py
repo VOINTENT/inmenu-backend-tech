@@ -47,36 +47,3 @@ class DishMeasureDao(BaseDao):
             """, dish_main_ids)
 
             return DishMeasuresDeserializer.deserialize(rows, DES_DISH_MEASURES_FROM_DB_FULL), None
-
-    async def get(self, menu_id: int) -> Tuple[Optional[List[DishMeasure]], Optional[Error]]:
-        sql = """
-            SELECT 
-                dish_measure.id                     AS dish_measure_id,
-                dish_measure.price_value            AS dish_measure_price_value,
-                dish_measure.measure_value          AS dish_measure_measure_value,
-                dish_measure.dish_main_id			AS dish_measure_dish_main_id
-            FROM 
-                dish_measure
-            WHERE 
-                dish_measure.dish_main_id IN(SELECT 
-                                                dish_main.id AS dish_main_id
-                                            FROM 	
-                                                dish_main	
-                                            WHERE 
-                                                dish_main.menu_main_id = $1)
-                """
-        if self.conn:
-            data = await self.conn.fetch(sql, menu_id)
-        else:
-            async with self.pool.acquire() as conn:
-                data = await conn.fetch(sql, menu_id)
-
-        if not data:
-            return ErrorEnum.DISH_MEASURE_VALUE_AND_PRICE_DOESNT_EXISTS
-
-        dish_measures = [dish_measure_serializer(dictionary) for dictionary in data]
-
-        if not dish_measures:
-            return None, ErrorEnum.DISH_MEASURE_VALUE_AND_PRICE_DOESNT_EXISTS
-
-        return dish_measures, None

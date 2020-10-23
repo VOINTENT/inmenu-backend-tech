@@ -1,7 +1,7 @@
 from typing import Optional, List, Tuple
 
 from src.internal.adapters.entities.error import Error
-from src.internal.biz.dao.currency import CurrencyDao
+from src.internal.biz.dao.currency_dao import CurrencyDao
 from src.internal.biz.entities.currency import Currency
 from src.internal.biz.services.base_service import BaseService
 
