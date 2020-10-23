@@ -13,7 +13,7 @@ class ServicesDao(BaseDao):
         sql = """
             SELECT 
                 service.id              AS service_id,
-                service_translate.name  AS service_translate_name
+                service_translate.name  AS service_name
             FROM 
                 service
             INNER JOIN 

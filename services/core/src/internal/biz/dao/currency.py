@@ -36,7 +36,7 @@ class CurrencyDao(BaseDao):
         sql = """
             SELECT 
                 currency.id                AS currency_id,
-                currency_translate.name    AS currency_translate_name, 
+                currency_translate.name    AS currency_name, 
                 currency.sign              AS currency_sign
             FROM
                 currency

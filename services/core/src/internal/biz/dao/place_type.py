@@ -16,7 +16,7 @@ class PlaceTypeDao(BaseDao):
         sql = """
             SELECT 
                 place_type.id                  AS place_type_id,
-                place_type_translate.name      AS place_type_translate_name
+                place_type_translate.name      AS place_type_name
             FROM
                 place_type
             INNER JOIN

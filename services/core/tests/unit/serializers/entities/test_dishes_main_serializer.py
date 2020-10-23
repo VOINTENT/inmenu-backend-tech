@@ -28,18 +28,22 @@ def test_dishes_main_serializer():
     assert isinstance(dish_main, DishMain)
     assert isinstance(dishes_main, DishMain)
 
-    assert dish_main.id == data['dish_main_id']
-    assert dish_main.name == data['dish_main_name']
-    assert dish_main.photo.full_url == data['dish_main_photo_link']
-    assert dish_main.description == data['dish_main_description']
-    assert dish_main.menu_main.id == data['dish_main_menu_main_id']
-    assert dish_main.menu_category.id == data['dish_main_menu_category_id']
-    assert dish_main.measure_unit.id == data['dish_main_measure_unit_id']
+    assert isinstance(dish_main.photo, Photo)
+    assert isinstance(dishes_main.photo, Photo)
 
-    assert dishes_main.id == data['dish_main_id']
-    assert dishes_main.name == data['dish_main_name']
-    assert dishes_main.photo.full_url == data['dish_main_photo_link']
-    assert dishes_main.description == data['dish_main_description']
-    assert dishes_main.menu_main.id == data['dish_main_menu_main_id']
-    assert dishes_main.menu_category.id == data['dish_main_menu_category_id']
-    assert dishes_main.measure_unit.id == data['dish_main_measure_unit_id']
+    assert isinstance(dish_main.menu_main, MenuMain)
+    assert isinstance(dishes_main.menu_main, MenuMain)
+
+    assert isinstance(dish_main.menu_category, MenuCategory)
+    assert isinstance(dishes_main.menu_category, MenuCategory)
+
+    assert isinstance(dish_main.measure_unit, MeasureUnit)
+    assert isinstance(dishes_main.measure_unit, MeasureUnit)
+
+    assert dish_main.id == dishes_main.id
+    assert dish_main.name == dishes_main.name
+    assert dish_main.photo.full_url == dishes_main.photo.full_url
+    assert dish_main.description == dishes_main.description
+    assert dish_main.menu_main.id == dishes_main.menu_main.id
+    assert dish_main.menu_category.id == dishes_main.menu_category.id
+    assert dish_main.measure_unit.id == dishes_main.measure_unit.id

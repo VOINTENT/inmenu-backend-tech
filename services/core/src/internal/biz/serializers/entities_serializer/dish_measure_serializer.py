@@ -11,7 +11,6 @@ def dish_measure_serializer(dictionary: dict) -> Optional[DishMeasure]:
                 price_value=dictionary['dish_measure_price_value'],
                 measure_value=dictionary['dish_measure_measure_value'],
                 dish_main=DishMain(id=dictionary['dish_measure_dish_main_id']))
-
         return dish_measure
     except:
         raise TypeError

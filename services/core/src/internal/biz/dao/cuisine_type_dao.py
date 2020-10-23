@@ -13,7 +13,7 @@ class CuisineTypeDao(BaseDao):
         sql = """
             SELECT 
                 cuisine_type.id                AS cuisine_type_id,
-                cuisine_type_translate.name    AS cuisine_type_translate_name
+                cuisine_type_translate.name    AS cuisine_type_name
             FROM
                 cuisine_type
             INNER JOIN 

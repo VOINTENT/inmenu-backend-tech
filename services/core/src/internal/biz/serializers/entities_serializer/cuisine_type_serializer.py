@@ -8,6 +8,6 @@ def cuisine_type_serializer(dictionary: dict) -> Optional[CuisineType]:
     try:
         return CuisineType(
             id=dictionary['cuisine_type_id'],
-            name=dictionary['cuisine_type_translate_name'])
+            name=dictionary['cuisine_type_name'])
     except:
         raise TypeError

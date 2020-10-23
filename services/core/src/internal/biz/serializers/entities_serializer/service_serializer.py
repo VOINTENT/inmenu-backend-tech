@@ -7,7 +7,7 @@ def service_serializer(dictionary: dict) -> Optional[Service]:
     try:
         return Service(
             id=dictionary['service_id'],
-            name=dictionary['service_translate_name']
+            name=dictionary['service_name']
         )
     except:
         raise TypeError

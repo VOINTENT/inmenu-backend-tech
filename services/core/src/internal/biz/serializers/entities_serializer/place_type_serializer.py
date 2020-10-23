@@ -5,7 +5,7 @@ def place_type_serializer(dictionary: dict) -> PlaceType:
     try:
         return PlaceType(
             id=dictionary['place_type_id'],
-            name=dictionary['place_type_translate_name']
+            name=dictionary['place_type_name']
         )
     except:
         raise TypeError
