@@ -19,7 +19,7 @@ class MenuSerializer(BaseSerializer):
     def _ser_for_get_menu(menu_common: Optional[MenuCommon]):
         return {'menu_main_id': menu_common.menu.id,
                 'menu_main_name': menu_common.menu.name,
-                'menu_main_photo_link': menu_common.menu.photo,
+                'menu_main_photo_link': menu_common.menu.photo.full_url,
                 'language_id': menu_common.language.id,
                 'language_name': menu_common.language.name,
                 'currency_id': menu_common.currency.id,
@@ -43,7 +43,7 @@ class MenuSerializer(BaseSerializer):
             'measure_unit_name': menu_common.measure_unit[dish_main.measure_unit.id - 1].short_name,
             'dish_main_id': dish_main.id,
             'dish_main_name': dish_main.name,
-            'dish_main_photo': dish_main.photo,
+            'dish_main_photo': dish_main.photo.full_url,
             'dish_main_description': dish_main.description
         }
         return data
