@@ -463,7 +463,7 @@ CREATE SEQUENCE dish_measures_translate_id_seq START 1;
 DROP TABLE IF EXISTS dish_measures_translate CASCADE;
 
 CREATE TABLE dish_measures_translate(
-    id INTEGER DEFAULT nextval('currency_translate_id_seq') PRIMARY KEY,
+    id INTEGER DEFAULT nextval('dish_measures_translate_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     dish_measure_id INTEGER NOT NULL REFERENCES dish_measure(id) ON DELETE CASCADE,
@@ -480,7 +480,7 @@ CREATE SEQUENCE measure_unit_translate_id_seq START 1;
 DROP TABLE IF EXISTS measure_unit_translate CASCADE;
 
 CREATE TABLE measure_unit_translate(
-    id INTEGER DEFAULT nextval('currency_translate_id_seq') PRIMARY KEY,
+    id INTEGER DEFAULT nextval('measure_unit_translate_id_seq') PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     edited_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
     measure_unit_id INTEGER NOT NULL REFERENCES measure_unit(id) ON DELETE CASCADE,
