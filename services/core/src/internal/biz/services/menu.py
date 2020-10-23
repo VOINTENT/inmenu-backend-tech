@@ -1,5 +1,7 @@
 from typing import Tuple, Optional, List
 
+from loguru import logger
+
 from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.dish_common_dao import DishCommonDao
