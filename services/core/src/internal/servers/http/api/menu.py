@@ -45,11 +45,3 @@ async def get_menu_mains_by_place_main_id(request: Request, place_main_id: int, 
         return err.get_response_with_error()
 
     return get_response_get_menu_mains_by_place_main_id(menu_mains)
-
-
-@menu.route('/<menu_id:int>')
-async def get_menu(request: Request, menu_id: int) -> dict or Error:
-    menu_common, err = await MenuService.get_menu(menu_id)
-    if err:
-        return err.get_response_with_error()
-    return get_response_menu_detail(menu_common)

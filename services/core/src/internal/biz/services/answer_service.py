@@ -155,8 +155,3 @@ class AnswerService(BaseService):
     @staticmethod
     def get_error_currency_doesnt_exists() -> Error:
         return Error(-314, 'Не указана валюта', 400)
-
-    @staticmethod
-    def get_error_menu_common_doesnt_exists() -> Error:
-        return Error(-315, 'Ошибка главного меню', 400)
-
