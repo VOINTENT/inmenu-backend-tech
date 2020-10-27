@@ -11,7 +11,7 @@ cuisine_types = Blueprint('cuisine_types', url_prefix='/cuisine_types')
 @cuisine_types.route('', methods=['GET'])
 @get_pagination_params
 @get_lang_id
-async def get_place_types(request: Request, pagination_size: int, pagination_after: int, lang_id: int):
+async def get_cuisine_types(request: Request, pagination_size: int, pagination_after: int, lang_id: int):
     cuisine_types, err = await CuisineTypeService.get_cuisine_types(pagination_size, pagination_after, lang_id)
     if err:
         return err.get_response_with_error()
