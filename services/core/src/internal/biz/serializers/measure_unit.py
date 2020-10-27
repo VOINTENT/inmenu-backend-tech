@@ -8,12 +8,12 @@ class MeasureUnitSerializer(BaseSerializer):
     @classmethod
     def _get_serializer(cls, format_ser: str):
         if format_ser == SER_MEASURE_UNIT:
-            return cls._serialize_get_currency_type
+            return cls._serialize_get_measure_units
         else:
             raise TypeError
 
     @staticmethod
-    def _serialize_get_currency_type(measure_unit: MeasureUnit) -> dict:
+    def _serialize_get_measure_units(measure_unit: MeasureUnit) -> dict:
         return {
             'id': measure_unit.id,
             'name': measure_unit.name,
