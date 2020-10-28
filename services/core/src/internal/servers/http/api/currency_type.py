@@ -6,7 +6,7 @@ from src.internal.servers.http.answers.currency_types import get_response_get_cu
 
 from src.internal.servers.http.middlewares.request import get_pagination_params, get_lang_id
 
-currency_types = Blueprint('currency_types', url_prefix='/currency_types')
+currency_types = Blueprint('currencies', url_prefix='/currencies')
 
 
 @currency_types.route('', methods=['GET'])

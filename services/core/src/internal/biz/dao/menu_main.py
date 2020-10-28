@@ -12,6 +12,7 @@ from src.internal.biz.entities.menu_main import MenuMain
 from src.internal.biz.serializers.entities_serializer.menu_main_serializer import menu_main_serializer
 
 MENU_PLACE_MAIN_FKEY = 'menu-place-main-fkey'
+MENU_CATEGORY_FOREIGN_KEY = 'menu_category_menu_main_id_fkey'
 
 
 class MenuMainDao(BaseDao):
@@ -40,7 +41,6 @@ class MenuMainDao(BaseDao):
         menu_main.id = menu_id
         return menu_main, None
 
-
     async def get_by_place_main_id(self, place_main_id: int, pagination_size: int, pagination_after: int):
         async with self.pool.acquire() as conn:
             rows = await conn.fetch(f"""
@@ -57,3 +57,34 @@ class MenuMainDao(BaseDao):
             """, place_main_id, pagination_size, pagination_after)
 
             return [MenuMainDeserializer.deserialize(row, DES_MENU_MAIN_FROM_DB_FULL) for row in rows], None
+
+    async def get_menu_main_id_by_place_main_id(self, place_main_id: int) -> Tuple[Optional[int], Optional[Error]]:
+        sql = """
+            SELECT menu_main.id
+            FROM menu_main
+            WHERE menu_main.place_main_id = $1
+        """
+        async with self.pool.acquire() as conn:
+            menu_main_id = await conn.fetchval(sql, place_main_id)
+
+        if not menu_main_id:
+            return None, ErrorEnum.MENU_MAIN_DOESNT_EXISTS
+
+        return menu_main_id, None
+
+    async def del_by_place_main_id(self, place_main_id: int) -> Tuple[Optional[bool], Optional[Error]]:
+        sql = """
+            DELETE FROM menu_main
+            WHERE menu_main.place_main_id = $1
+        """
+        try:
+            async with self.pool.acquire() as conn:
+                await conn.execute(sql, place_main_id)
+
+        except asyncpg.exceptions.ForeignKeyViolationError as exc:
+            if exc.constraint_name == MENU_CATEGORY_FOREIGN_KEY:
+                return None, ErrorEnum.MENU_CATEGORY_ALREADY_EXISTS
+            else:
+                raise TypeError
+
+        return True, None

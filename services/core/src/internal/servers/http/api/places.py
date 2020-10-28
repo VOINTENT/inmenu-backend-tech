@@ -11,7 +11,7 @@ from src.internal.biz.services.place_service import PlaceService
 from src.internal.biz.validators.place_add import PlaceAddSchema
 from src.internal.servers.http.answers.places import get_response_get_places, get_response_get_places_by_name, \
     get_response_get_locations_with_places, get_response_get_place_locations_on_map, \
-    get_response_get_place_location_partial_detail, get_response_get_my_places
+    get_response_get_place_location_partial_detail, get_response_get_my_places, get_response_del_place
 from src.internal.servers.http.middlewares.auth import required_auth
 from src.internal.servers.http.middlewares.log import log_request
 from src.internal.servers.http.middlewares.request import get_pagination_params, get_city_name, get_lang_id, \
@@ -123,3 +123,14 @@ async def get_my_places(request: Request, auth_account_main_id: int, pagination_
 #         return err.get_response_with_error()
 #
 #     return get_response_get_places_by_name(place_commons)
+
+
+@places.route('/<place_main_id:int>', methods=['DELETE'])
+async def del_my_place(request: Request, place_main_id: int):
+    if request.method == 'DELETE':
+        print('hello')
+        response, err = await PlaceService.del_place(place_main_id)
+        if err:
+            return err.get_response_with_error()
+
+        return get_response_del_place(response)
