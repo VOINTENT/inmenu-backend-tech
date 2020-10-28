@@ -5,6 +5,8 @@ from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.biz.deserializers.language import LanguageDeserializer, DES_LANGUAGE_FROM_DB_FULL, LANGUAGE_ID, \
     LANGUAGE_NAME, LANGUAGE_CODE_NAME
 from src.internal.biz.entities.language import Language
+from src.internal.adapters.enums.errors import ErrorEnum
+from src.internal.biz.serializers.entities_serializer.language_serializer import language_serializer
 
 
 class LanguageDao(BaseDao):
@@ -23,6 +25,7 @@ class LanguageDao(BaseDao):
                 return None, None
 
             return Language(id=language_id, code_name=language_code_name), None
+
 
     async def get_all(self, pagination_size: int, pagination_after: int) -> Tuple[Optional[List[object]], Optional[Error]]:
         async with self.pool.acquire() as conn:

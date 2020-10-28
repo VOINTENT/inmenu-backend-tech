@@ -5,6 +5,8 @@ from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.biz.deserializers.menu_category import MenuCategoryDeserializer, MENU_CATEGORY_ID, MENU_CATEGORY_NAME, \
     DES_MENU_CATEGORY_FROM_DB_FULL
 from src.internal.biz.entities.menu_category import MenuCategory
+from src.internal.adapters.enums.errors import ErrorEnum
+from src.internal.biz.serializers.entities_serializer.menu_category_serializer import menu_category_serializer
 
 
 class MenuCategoryDao(BaseDao):
@@ -18,6 +20,7 @@ class MenuCategoryDao(BaseDao):
             menu_category_id = await self.conn.fetchval(sql, menu_category.menu_main.id, menu_category.name)
             menu_category.id = menu_category_id
             return menu_category, None
+
         else:
             async with self.pool.acquire() as conn:
                 menu_category_id = await conn.fetchval(sql, menu_category.menu_main.id, menu_category.name)

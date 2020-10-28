@@ -128,6 +128,7 @@ class AnswerService(BaseService):
     def get_error_menu_main_doesnt_exists() -> Error:
         return Error(-310, 'Данное меню не существует', 400)
 
+
 #     ==================================================================================
 #     Internal errors
 
@@ -138,3 +139,19 @@ class AnswerService(BaseService):
     @staticmethod
     def get_error_not_found() -> Error:
         return Error(-402, 'Объект не найден', 400)
+
+    @staticmethod
+    def get_error_dishes_doesnt_exists() -> Error:
+        return Error(-311, 'Данные блюда не существуют', 400)
+
+    @staticmethod
+    def get_error_dish_measure_value_and_price_doesnt_exists() -> Error:
+        return Error(-312, 'Вес и цены блюд отсутствуют', 400)
+
+    @staticmethod
+    def get_error_language_doesnt_exists() -> Error:
+        return Error(-313, 'Язык меню не указан', 400)
+
+    @staticmethod
+    def get_error_currency_doesnt_exists() -> Error:
+        return Error(-314, 'Не указана валюта', 400)

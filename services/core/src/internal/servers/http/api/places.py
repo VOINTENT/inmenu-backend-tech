@@ -57,6 +57,7 @@ async def get_places(request: Request, pagination_size: int = None, pagination_a
     return get_response_get_places(place_commons)
 
 
+
 @places.route('/byName', methods=['GET'])
 @log_request
 @get_place_name
@@ -110,3 +111,15 @@ async def get_my_places(request: Request, auth_account_main_id: int, pagination_
         return err.get_response_with_error()
 
     return get_response_get_my_places(place_mains)
+
+# @places.route('/byName', methods=['GET'])
+# @get_place_name
+# @get_city_name
+# @get_pagination_params
+# @get_lang_id
+# async def get_places_by_name(request: Request, place_name: str, city_name: str, pagination_size: int, pagination_after: int, lang_id: int):
+#     place_commons, err = await PlaceService.get_place_by_name(city_name, place_name, pagination_size, pagination_after, lang_id)
+#     if err:
+#         return err.get_response_with_error()
+#
+#     return get_response_get_places_by_name(place_commons)

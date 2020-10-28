@@ -10,11 +10,13 @@ class Currency(AbstractModel):
                  created_at: Optional[datetime] = None,
                  edited_at: Optional[datetime] = None,
                  name: Optional[str] = None,
+                 short_name: Optional[str] = None,
                  sign: Optional[str] = None) -> None:
         super().__init__(id, created_at, edited_at)
         self.__class__._check(name=name, sign=sign)
         self.__name = name
         self.__sign = sign
+        self.__short_name = short_name
 
     @property
     def name(self) -> Optional[str]:
@@ -23,6 +25,9 @@ class Currency(AbstractModel):
     @property
     def sign(self) -> Optional[str]:
         return self.__sign
+
+    def short_name(self) -> Optional[str]:
+        return self.__short_name
 
     @staticmethod
     def _check(**kwargs):

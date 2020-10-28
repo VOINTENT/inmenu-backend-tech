@@ -11,7 +11,7 @@ from src.internal.biz.deserializers.dish_main import DISH_MAIN_NAME, DISH_MAIN, 
 from src.internal.biz.deserializers.measure_unit import MEASURE_UNIT_SHORT_NAME
 from src.internal.biz.deserializers.photo import PHOTO_SHORT_URL
 from src.internal.biz.entities.dish_main import DishMain
-
+from src.internal.biz.serializers.entities_serializer.dish_main_serializer import dishes_main_serializer
 
 MEASURE_UNIT_FKEY = 'dish_main_measure_unit_id_fkey'
 MENU_CATEGORY_FREY = 'dish_main_menu_category_id_fkey'
@@ -27,8 +27,10 @@ class DishMainDao(BaseDao):
         """
 
         try:
-            dish_main_id = await self.conn.fetchval(sql, dish_main.name, dish_main.photo.short_url, dish_main.description,
-                                                    dish_main.menu_main.id, dish_main.menu_category.id, dish_main.measure_unit.id)
+            dish_main_id = await self.conn.fetchval(sql, dish_main.name, dish_main.photo.short_url,
+                                                    dish_main.description,
+                                                    dish_main.menu_main.id, dish_main.menu_category.id,
+                                                    dish_main.measure_unit.id)
         except asyncpg.exceptions.ForeignKeyViolationError as exc:
             if exc.constraint_name == MEASURE_UNIT_FKEY:
                 return None, ErrorEnum.MEASURE_UNIT_DOESNT_EXISTS
@@ -41,6 +43,7 @@ class DishMainDao(BaseDao):
 
         dish_main.id = dish_main_id
         return dish_main, None
+
 
     async def get_by_menu_category_id(self, menu_category_id: int, pagination_size: int, pagination_after: int) -> Tuple[Optional[List[DishMain]], Optional[Error]]:
         async with self.pool.acquire() as conn:
