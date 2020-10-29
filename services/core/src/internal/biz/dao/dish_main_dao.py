@@ -16,7 +16,6 @@ from src.internal.biz.serializers.entities_serializer.dish_main_serializer impor
 MEASURE_UNIT_FKEY = 'dish_main_measure_unit_id_fkey'
 MENU_CATEGORY_FREY = 'dish_main_menu_category_id_fkey'
 MENU_MAIN_FREY = 'dish_main_menu_main_id_fkey'
-DISH_MEASURE_FKEY = 'dish_measure_dish_main_id_fkey'
 
 
 class DishMainDao(BaseDao):
@@ -68,31 +67,3 @@ class DishMainDao(BaseDao):
             """, menu_category_id, pagination_size, pagination_after)
 
             return [DishMainDeserializer.deserialize(row, DES_DISH_MAIN_FROM_DB_FULL) for row in rows], None
-
-    async def get_list_dish_main_id_by_menu_main_id(self, menu_main_id: int) -> Tuple[Optional[dict], Optional[Error]]:
-        sql = """
-            SELECT dish_main.id
-            FROM dish_main
-            WHERE dish_main.menu_main_id = $1
-        """
-        async with self.pool.acquire() as conn:
-            data = await conn.fetch(sql, menu_main_id)
-
-        if not data:
-            return None, ErrorEnum.DISHES_DOESNT_EXISTS
-
-        return data, None
-
-    async def del_by_menu_main_id(self, menu_main_id: int) -> Tuple[Optional[bool], Optional[Error]]:
-        sql = """
-            DELETE FROM dish_main
-            WHERE dish_main.menu_main_id = $1
-        """
-        try:
-            async with self.pool.acquire() as conn:
-                await conn.execute(sql, menu_main_id)
-        except asyncpg.exceptions.ForeignKeyViolationError as exc:
-            if exc.constraint_name == DISH_MEASURE_FKEY:
-                return None, ErrorEnum.DISH_MEASURE_ALREADY_EXISTS
-
-        return True, None

@@ -47,18 +47,3 @@ class DishMeasureDao(BaseDao):
             """, dish_main_ids)
 
             return DishMeasuresDeserializer.deserialize(rows, DES_DISH_MEASURES_FROM_DB_FULL), None
-
-    async def del_by_dishes_id(self, tuple_dishes_main_id: tuple) -> Optional[bool]:
-        if self.conn:
-            await self.conn.execute(f"""
-                                    DELETE FROM dish_measure
-                                    WHERE dish_measure.dish_main_id IN {tuple_dishes_main_id}
-                                    """)
-        else:
-            async with self.pool.acquire() as conn:
-                await conn.execute(f"""
-                            DELETE FROM dish_measure
-                            WHERE dish_measure.dish_main_id IN {tuple_dishes_main_id}
-                            """)
-
-        return True

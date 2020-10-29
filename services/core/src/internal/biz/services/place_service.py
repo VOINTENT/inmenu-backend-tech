@@ -2,10 +2,6 @@ from typing import Optional, Tuple, List
 
 from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
-from src.internal.biz.dao.dish_main_dao import DishMainDao
-from src.internal.biz.dao.dish_measure_dao import DishMeasureDao
-from src.internal.biz.dao.menu_category import MenuCategoryDao
-from src.internal.biz.dao.menu_main import MenuMainDao
 from src.internal.biz.dao.place_common import PlaceCommonDao
 from src.internal.biz.dao.place_cuisine_type_dao import PlaceCuisineTypeDao
 from src.internal.biz.dao.place_location import PlaceLocationDao

@@ -15,8 +15,6 @@ from src.internal.biz.entities.place_main import PlaceMain
 UNIQUE_PLACE_LOGIN = 'unique_place_login'
 LANGUAGE_FOREIGN_KEY = 'place_main_main_language_fkey'
 CURRENCY_FOREIGN_KEY = 'place_main_main_currency_fkey'
-MENU_MAIN_FOREIGN_KEY = 'menu_main_place_main_id_fkey'
-
 
 
 class PlaceMainDao(BaseDao):
@@ -153,11 +151,8 @@ class PlaceMainDao(BaseDao):
         try:
             async with self.pool.acquire() as conn:
                 value = await conn.fetchval(sql, place_main_id)
-        except asyncpg.exceptions.ForeignKeyViolationError as exc:
-            if exc.constraint_name == 'menu_main_place_main_id_fkey':
-                return False, ErrorEnum.MENU_MAIN_ALREADY_EXISTS
-            else:
-                raise TypeError
+        except:
+            raise TypeError
 
         if not value:
             return None, ErrorEnum.PLACE_DOESNT_EXISTS

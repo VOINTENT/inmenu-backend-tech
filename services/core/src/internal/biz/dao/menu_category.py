@@ -1,7 +1,5 @@
 from typing import Tuple, Optional, List
 
-import asyncpg
-
 from src.internal.adapters.entities.error import Error
 from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.biz.deserializers.menu_category import MenuCategoryDeserializer, MENU_CATEGORY_ID, MENU_CATEGORY_NAME, \
@@ -9,8 +7,6 @@ from src.internal.biz.deserializers.menu_category import MenuCategoryDeserialize
 from src.internal.biz.entities.menu_category import MenuCategory
 from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.serializers.entities_serializer.menu_category_serializer import menu_category_serializer
-
-DISH_MAIN_FOREIGN_KEY = 'dish_main_menu_category_id_fkey'
 
 
 class MenuCategoryDao(BaseDao):
@@ -44,17 +40,3 @@ class MenuCategoryDao(BaseDao):
             """, menu_main_id)
 
             return [MenuCategoryDeserializer.deserialize(row, DES_MENU_CATEGORY_FROM_DB_FULL) for row in rows], None
-
-    async def del_by_menu_main_id(self, menu_main_id: int) -> Tuple[Optional[bool], Optional[Error]]:
-        sql = """
-            DELETE FROM menu_category
-            WHERE menu_category.menu_main_id = $1
-        """
-        try:
-            async with self.pool.acquire() as conn:
-                await conn.execute(sql, menu_main_id)
-        except asyncpg.exceptions.ForeignKeyViolationError as exc:
-            if exc.constraint_name == DISH_MAIN_FOREIGN_KEY:
-                return False, ErrorEnum.DISHES_ALREADY_EXISTS
-
-        return True, None
