@@ -1,6 +1,6 @@
 from typing import Tuple, Optional, List
 
-from loguru import logger
+# from loguru import logger
 
 from src.internal.adapters.entities.error import Error
 from src.internal.biz.dao.base_dao import BaseDao

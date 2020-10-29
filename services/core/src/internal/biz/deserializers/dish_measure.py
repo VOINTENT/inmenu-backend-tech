@@ -1,7 +1,7 @@
 from typing import Union
 
 from asyncpg import Record
-from loguru import logger
+# from loguru import logger
 
 from src.internal.biz.deserializers.base_constants import ID, CREATED_AT, EDITED_AT
 from src.internal.biz.deserializers.base_deserializer import BaseDeserializer

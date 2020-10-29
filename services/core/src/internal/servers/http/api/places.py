@@ -127,8 +127,8 @@ async def get_my_places(request: Request, auth_account_main_id: int, pagination_
 
 @places.route('/<place_main_id:int>', methods=['DELETE'])
 async def del_my_place(request: Request, place_main_id: int):
+
     if request.method == 'DELETE':
-        print('hello')
         response, err = await PlaceService.del_place(place_main_id)
         if err:
             return err.get_response_with_error()

@@ -148,14 +148,18 @@ class PlaceMainDao(BaseDao):
         sql = """
             DELETE FROM place_main
             WHERE place_main.id = $1
+            RETURNING place_main.id
         """
         try:
             async with self.pool.acquire() as conn:
                 value = await conn.fetchval(sql, place_main_id)
         except asyncpg.exceptions.ForeignKeyViolationError as exc:
             if exc.constraint_name == 'menu_main_place_main_id_fkey':
-                return True, ErrorEnum.MENU_MAIN_ALREADY_EXISTS
+                return False, ErrorEnum.MENU_MAIN_ALREADY_EXISTS
             else:
                 raise TypeError
+
+        if not value:
+            return None, ErrorEnum.PLACE_DOESNT_EXISTS
 
         return True, None

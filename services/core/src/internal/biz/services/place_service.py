@@ -123,40 +123,7 @@ class PlaceService(BaseService):
 
     @staticmethod
     async def del_place(place_main_id: int) -> Tuple[Optional[bool], Optional[Error]]:
-        menu_main_id, err = await MenuMainDao().get_menu_main_id_by_place_main_id(place_main_id)
-        if err:
-            return False, err
-
-        dishes_main_id, err = await DishMainDao().get_list_dish_main_id_by_menu_main_id(place_main_id)
-
-        list_dishes_main_id = [dishes_main_id[i]['id'] for i in range(len(dishes_main_id))]
-        tuple_dishes_main_id = tuple(list_dishes_main_id)
-
-        response_dish_measure = await DishMeasureDao().del_by_dishes_id(tuple_dishes_main_id)
-        if not response_dish_measure:
-            return False, None
-
-        response_dish_main, err = await DishMainDao().del_by_menu_main_id(menu_main_id)
-        if not response_dish_main:
-            return False, None
-        if err:
-            return False, err
-
-        response_menu_category, err = await  MenuCategoryDao().del_by_menu_main_id(menu_main_id)
-        if not response_menu_category:
-            return False, None
-        if err:
-            return False, err
-
-        response_menu_main, err = await MenuMainDao().del_by_place_main_id(place_main_id)
-        if not response_menu_main:
-            return False, None
-        if err:
-            return False, err
-
         response_place_main, err = await PlaceMainDao().del_by_place_main_id(place_main_id)
-        if err:
-            return False, err
         if err:
             return False, err
 
