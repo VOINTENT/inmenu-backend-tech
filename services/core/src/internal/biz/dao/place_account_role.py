@@ -1,6 +1,7 @@
 from typing import Tuple, Optional
 
 from src.internal.adapters.entities.error import Error
+from src.internal.adapters.enums.errors import ErrorEnum
 from src.internal.biz.dao.base_dao import BaseDao
 from src.internal.biz.entities.account_status import AccountStatus
 from src.internal.biz.entities.place_account_role import PlaceAccountRole
@@ -32,3 +33,22 @@ class PlaceAccountRoleDao(BaseDao):
                 return None, None
 
             return PlaceAccountRole(account_status=AccountStatus(id=status_id)), None
+
+    async def get_by_place_main_id(self, place_main_id) -> Tuple[Optional[PlaceAccountRole], Optional[Error]]:
+        sql = """
+            SELECT 
+                account_status.id, account_status.name
+            FROM 
+                place_account_role
+            INNER JOIN 
+                account_status ON place_account_role.account_status_id = account_status.id
+            WHERE 
+                place_main_id = $1
+        """
+        async with self.pool.acquire() as conn:
+            status = await conn.fetchrow(sql, place_main_id)
+
+        if not status:
+            return None, ErrorEnum.STATUS_IS_UNDEFINED
+
+        return PlaceAccountRole(account_status=AccountStatus(id=status[0], name=status[1])), None

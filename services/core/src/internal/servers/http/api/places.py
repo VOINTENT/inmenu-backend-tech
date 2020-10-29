@@ -16,6 +16,7 @@ from src.internal.servers.http.middlewares.auth import required_auth
 from src.internal.servers.http.middlewares.log import log_request
 from src.internal.servers.http.middlewares.request import get_pagination_params, get_city_name, get_lang_id, \
     get_place_name, get_on_map_params
+from src.internal.servers.http.middlewares.status import get_status
 
 places = Blueprint('places', url_prefix='/places')
 
@@ -126,6 +127,8 @@ async def get_my_places(request: Request, auth_account_main_id: int, pagination_
 
 
 @places.route('/<place_main_id:int>', methods=['DELETE'])
+@required_auth
+@get_status
 async def del_my_place(request: Request, place_main_id: int):
 
     if request.method == 'DELETE':

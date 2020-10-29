@@ -128,6 +128,10 @@ class AnswerService(BaseService):
     def get_error_menu_main_doesnt_exists() -> Error:
         return Error(-310, 'Данное меню не существует', 400)
 
+    @staticmethod
+    def get_error_status_is_undefined() -> Error:
+        return Error(-311, 'Статус не определен', 400)
+
 
 #     ==================================================================================
 #     Internal errors

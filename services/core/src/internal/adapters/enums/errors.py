@@ -112,3 +112,11 @@ class ErrorEnum:
     @classproperty
     def CURRENCY_DOESNT_EXISTS(cls) -> Error:
         return AnswerService.get_error_currency_doesnt_exists()
+
+    @classproperty
+    def STATUS_DOESNT_MATCH(cls) -> Error:
+        return AnswerService.get_error_place_forbidden()
+
+    @classproperty
+    def STATUS_IS_UNDEFINED(cls) -> Error:
+        return AnswerService.get_error_status_is_undefined()
