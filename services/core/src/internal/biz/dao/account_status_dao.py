@@ -13,7 +13,7 @@ class AccountStatusDao(BaseDao):
             account_status_id = await conn.fetchval("""
                 SELECT account_status.id
                 FROM account_status
-                WHERE lower(account_status.name) = 'владелец заведения'
+                WHERE account_status.id = 1
             """)
             if not account_status_id:
                 raise TypeError
