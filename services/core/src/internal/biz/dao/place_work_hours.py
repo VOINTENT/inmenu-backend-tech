@@ -1,3 +1,4 @@
+import datetime
 from datetime import time
 from typing import List, Tuple, Optional
 
@@ -31,31 +32,26 @@ class PlaceWorkHoursDao(BaseDao):
 
         return None, None
 
-    async def get_by_place_main_id(self, place_main_id):
-        sql = """
-            SELECT 
-                place_main_id, week_day, time_start, time_finish, is_holiday
-            FROM
-                place_work_hours
-            WHERE place_main_id = $1 
-        """
-        data = await self.conn.fetch(sql, place_main_id)
-        return data
-
-    async def update_work_hours(self, place_main_id, place_work_hours_list: List[PlaceWorkHours], arr: List[Tuple]):
+    async def update_work_hours(self, place_main_id, place_work_hours_list: List[PlaceWorkHours]):
         sql = """"""
         update_values = []
         for place_work_hours, i in list(zip(place_work_hours_list, range(1, len(place_work_hours_list) * 5, 5))):
+            if place_work_hours.time_start is None:
+                time_start = None
+            else:
+                time_start = place_work_hours.time_start
+            if place_work_hours.time_finish is None:
+                time_finish = None
+            else:
+                time_finish = place_work_hours.time_finish
             sql += '; ' if len(update_values) != 0 else ''
-            sql += f" UPDATE place_work_hours SET time_start = CASE WHEN ${i} IS NOT NULL THEN ${i} ELSE NULL END, " \
-                   f"time_finish = CASE WHEN ${i+1} IS NOT NULL THEN ${i+1} ELSE NULL END, " \
-                   f"is_holiday = CASE WHEN ${i + 2} IS NOT NULL THEN ${i + 3} ELSE NULL END " \
-                   f"WHERE place_main_id = ${i + 3} AND week_day = ${i + 4} "
-            update_values.append(place_work_hours.time_start)
-            update_values.append(place_work_hours.time_finish)
-            update_values.append(place_work_hours.is_holiday)
-            update_values.append(place_work_hours.place_main.id)
-            update_values.append(place_work_hours.week_day)
-        if update_values:
-            await self.conn.fetchval(sql, *update_values)
+            sql += f" UPDATE place_work_hours " \
+                   f" SET time_start = {f'{time_start}' if time_start else None}, " \
+                   f"time_finish =  {f'{time_finish}' if time_finish else None}, " \
+                   f"is_holiday = {place_work_hours.is_holiday} " \
+                   f"WHERE place_main_id = {place_work_hours.place_main.id} AND week_day = '{place_work_hours.week_day}'; "
+        print(sql)
+
+        await self.conn.execute(sql)
         return None, None
+

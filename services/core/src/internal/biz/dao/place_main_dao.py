@@ -164,12 +164,12 @@ class PlaceMainDao(BaseDao):
             UPDATE
                 place_main
             SET
-                main_language = CASE WHEN $1::int != 0 THEN $1::int WHEN $1::int = 0 THEN NULL::int WHEN $1::int IS NULL THEN main_language END,
-                name = CASE WHEN $2::varchar != '0' THEN $2::varchar WHEN $2::varchar = '0' THEN NULL WHEN $2::varchar IS NULL THEN name END,
-                description = CASE WHEN $3::varchar != '0' THEN $3::varchar WHEN $3::varchar = '0' THEN NULL WHEN $3::varchar IS NULL THEN description END,
-                login = CASE WHEN $4::varchar != '0' THEN $4::varchar WHEN $4::varchar = '0' THEN NULL WHEN $4::varchar IS NULL THEN login END,
-                photo_link = CASE WHEN $5::varchar != '0' THEN $5::varchar WHEN $5::varchar = '0' THEN NULL WHEN $5::varchar IS NULL THEN photo_link END,
-                main_currency_id = CASE WHEN $6::int != 0 THEN $6::int WHEN $6::int = 0 THEN NULL::int WHEN $6::int IS NULL THEN main_currency_id END
+                main_language = CASE WHEN $1::int != -1 THEN $1::int WHEN $1::int = -1 THEN NULL::int WHEN $1::int IS NULL THEN main_language END,
+                name = CASE WHEN $2::varchar != '-1' THEN $2::varchar WHEN $2::varchar = '-1' THEN NULL WHEN $2::varchar IS NULL THEN name END,
+                description = CASE WHEN $3::varchar != '-1' THEN $3::varchar WHEN $3::varchar = '-1' THEN NULL WHEN $3::varchar IS NULL THEN description END,
+                login = CASE WHEN $4::varchar != '-1' THEN $4::varchar WHEN $4::varchar = '-1' THEN NULL WHEN $4::varchar IS NULL THEN login END,
+                photo_link = CASE WHEN $5::varchar != '-1' THEN $5::varchar WHEN $5::varchar = '-1' THEN NULL WHEN $5::varchar IS NULL THEN photo_link END,
+                main_currency_id = CASE WHEN $6::int != -1 THEN $6::int WHEN $6::int = -1 THEN NULL::int WHEN $6::int IS NULL THEN main_currency_id END
             WHERE place_main.id = $7
             RETURNING id
         """

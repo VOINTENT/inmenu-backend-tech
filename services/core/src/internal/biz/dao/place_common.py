@@ -174,42 +174,38 @@ class PlaceCommonDao(BaseDao):
                 # ###
                 place_common.place_contacts.place_main = place_main
                 # ###
-                # place_place_type_dao = PlacePlaceTypeDao(conn)
-                # if place_common.place_places_types:
-                #     data = await PlacePlaceTypeDao(conn).get_place_main_id_place_place_type_id(place_main_id)
-                #     print(data)
-                #     arr = [(main_id, type_id) for main_id, type_id in data]
-                #     print(arr)
-                #     _, err = await PlacePlaceTypeDao(conn).update_place_types(place_main_id, place_common.place_places_types, arr)
-                # ###
                 if place_common.place_services:
                     place_service_dao = PlaceServiceDao(conn)
-                    data = await place_service_dao.get_place_main_id_place_place_service_id(place_main_id)
-                    print(data)
-                    arr = [(main_id, service_id) for main_id, service_id in data]
-                    print(arr)
-                    _, err = await place_service_dao.update_place_service(place_main_id, place_common.place_services, arr)
+                    _, err = await place_service_dao.update_place_service(place_main_id, place_common.place_services)
+                if err:
+                    return None, err
                 # ###
                 if place_common.place_cuisine_types:
                     place_cuisine_type_dao = PlaceCuisineTypeDao(conn)
-                    data = await place_cuisine_type_dao.get_place_main_id_place_cuisine_type_id(place_main_id)
-                    print(data)
-                    arr = [(main_id, cuisine_type_id) for main_id, cuisine_type_id in data]
-                    print(arr)
-                    _, err = await place_cuisine_type_dao.update_cuisine_type(place_main_id, place_common.place_cuisine_types, arr)
+                    _, err = await place_cuisine_type_dao.update_cuisine_type(place_main_id, place_common.place_cuisine_types)
+                if err:
+                    return None, err
                 # ###
                 # if place_common.place_work_hours:
                 #     place_work_hours_dao = PlaceWorkHoursDao(conn)
-                #     data = await place_work_hours_dao.get_by_place_main_id(place_main_id)
-                #
-                #     arr = [(place_main_id, week_day, time_start, time_finish, is_holiday) for place_main_id, week_day, time_start, time_finish, is_holiday in data]
-                #     _, err = await place_work_hours_dao.update_work_hours(place_main_id, place_common.place_work_hours, arr)
+                #     _, err = await place_work_hours_dao.update_work_hours(place_main_id, place_common.place_work_hours)
                 # ###
                 place_location_dao = PlaceLocationDao(conn)
                 _, err = await place_location_dao.update(place_main_id, place_common.place_location)
+                if err:
+                    return None, err
                 # ###
                 place_contacts_dao = PlaceContactsDao(conn)
 
                 _, err = await place_contacts_dao.update(place_main_id, place_common.place_contacts)
+                if err:
+                    return None, err
+
+                if place_common.place_places_types :
+                    print('agegws')
+                    place_place_type_dao = PlacePlaceTypeDao(conn)
+                    _, err = await place_place_type_dao.update_place_types(place_main_id,place_common.place_places_types)
+                if err:
+                    return None, err
 
                 return place_common, None

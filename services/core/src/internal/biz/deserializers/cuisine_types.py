@@ -1,6 +1,7 @@
 from typing import List
 
 from src.internal.biz.deserializers.base_deserializer import BaseDeserializer
+from src.internal.biz.deserializers.place_main import TEMP_GET_NULL_INT
 from src.internal.biz.entities.cuisine_type import CuisineType
 from src.internal.biz.entities.place_cuisine_type import PlaceCuisineType
 
@@ -25,4 +26,4 @@ class CuisineTypesDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserializer_update(cuisine_types: List[int]) -> List[PlaceCuisineType]:
-        return [PlaceCuisineType(cuisine_type=CuisineType(id=cuisine_type_id)) for cuisine_type_id in cuisine_types]
+        return [PlaceCuisineType(cuisine_type=CuisineType(id=cuisine_type_id if cuisine_type_id is not None else TEMP_GET_NULL_INT)) for cuisine_type_id in cuisine_types]

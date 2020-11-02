@@ -4,7 +4,8 @@ from asyncpg import Record
 
 from src.internal.biz.deserializers.base_constants import ID, CREATED_AT, EDITED_AT
 from src.internal.biz.deserializers.base_deserializer import BaseDeserializer, DES_FROM_DICT
-from src.internal.biz.deserializers.place_main import PLACE_MAIN, PlaceMainDeserializer, DES_PLACE_MAIN_FROM_DB_FULL
+from src.internal.biz.deserializers.place_main import PLACE_MAIN, PlaceMainDeserializer, DES_PLACE_MAIN_FROM_DB_FULL, \
+    TEMP_GET_NULL_STR
 from src.internal.biz.deserializers.utils import filter_keys_by_substr
 from src.internal.biz.entities.place_contacts import PlaceContacts
 
@@ -69,10 +70,10 @@ class PlaceContactsDeserializer(BaseDeserializer):
     @staticmethod
     def _deserialize_update(place_contacts: dict) -> PlaceContacts:
         return PlaceContacts(
-            phone_number=place_contacts['phone_number'] if place_contacts.get('phone_number') else None,
-            email=place_contacts['email'] if place_contacts.get('email') else None,
-            site_link=place_contacts['site_link'] if place_contacts.get('site_link') else None,
-            facebook_link=place_contacts['facebook_link'] if place_contacts.get('facebook_link') else None,
-            instagram_link=place_contacts['instagram_link'] if place_contacts.get('instagram_link') else None,
-            vk_link=place_contacts['vk_link'] if place_contacts.get('vk_link') else None
+            phone_number=(place_contacts['phone_number'] if place_contacts['phone_number'] is not None else TEMP_GET_NULL_STR) if 'phone_number' in place_contacts.keys() else None,
+            email=(place_contacts['email'] if place_contacts.get('email') is not None else TEMP_GET_NULL_STR) if 'email' in place_contacts.keys() else None,
+            site_link=(place_contacts['site_link'] if place_contacts.get('site_link') is not None else TEMP_GET_NULL_STR) if 'site_link' in place_contacts.keys() else None,
+            facebook_link=(place_contacts['facebook_link'] if place_contacts.get('facebook_link') is not None else TEMP_GET_NULL_STR) if 'facebook_link' in place_contacts.keys() else None,
+            instagram_link=(place_contacts['instagram_link'] if place_contacts.get('instagram_link') is not None else TEMP_GET_NULL_STR) if 'instagram_link' in place_contacts.keys() else None,
+            vk_link=(place_contacts['vk_link'] if place_contacts.get('vk_link') is not None else TEMP_GET_NULL_STR)if 'vk_link' in place_contacts.keys() else None,
         )

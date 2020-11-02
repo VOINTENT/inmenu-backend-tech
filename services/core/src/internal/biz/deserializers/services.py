@@ -1,6 +1,7 @@
 from typing import List
 
 from src.internal.biz.deserializers.base_deserializer import BaseDeserializer
+from src.internal.biz.deserializers.place_main import TEMP_GET_NULL_INT
 from src.internal.biz.entities.place_service import PlaceService
 from src.internal.biz.entities.service import Service
 
@@ -25,4 +26,4 @@ class ServicesDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(services: List[int]) -> List[PlaceService]:
-        return [PlaceService(service=Service(id=service_type_id if service_type_id else 0)) for service_type_id in services]
+        return [PlaceService(service=Service(id=service_type_id if service_type_id is not None else TEMP_GET_NULL_INT)) for service_type_id in services]

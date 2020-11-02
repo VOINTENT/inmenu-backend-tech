@@ -1,6 +1,7 @@
 from typing import List
 
 from src.internal.biz.deserializers.base_deserializer import BaseDeserializer
+from src.internal.biz.deserializers.place_main import TEMP_GET_NULL_INT
 from src.internal.biz.entities.place_place_type import PlacePlaceType
 from src.internal.biz.entities.place_type import PlaceType
 
@@ -25,4 +26,5 @@ class PlaceTypesDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(place_types: List[int]) -> List[PlacePlaceType]:
-        return [PlacePlaceType(place_type=PlaceType(id=place_type_id if place_type_id is not None else 0)) for place_type_id in place_types]
+        print('i Am')
+        return [PlacePlaceType(place_type=PlaceType(id=place_type_id if place_type_id is not None else TEMP_GET_NULL_INT)) for place_type_id in place_types]
