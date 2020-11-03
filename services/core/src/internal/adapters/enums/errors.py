@@ -128,3 +128,7 @@ class ErrorEnum:
     @classproperty
     def UNIQUE_PLACE_SERVICE(cls) -> Error:
         return AnswerService.get_error_unique_place_service()
+
+    @classproperty
+    def UNIQUE_CUISINE_TYPE(cls) -> Error:
+        return AnswerService.get_error_unique_cuisine_type()

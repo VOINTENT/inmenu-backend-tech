@@ -239,7 +239,8 @@ CREATE TABLE place_work_hours(
     week_day VARCHAR(5) NOT NULL CONSTRAINT valid_week_day CHECK (week_day IN ('mo', 'tu', 'we', 'th', 'fr', 'sa', 'su')),
     time_start TIME,
     time_finish TIME,
-    is_holiday BOOLEAN NOT NULL
+    is_holiday BOOLEAN NOT NULL,
+    is_all_day BOOLEAN NOT NULL
 );
 
 -- -----------------------------------------------------------------------------

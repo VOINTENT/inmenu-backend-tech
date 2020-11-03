@@ -4,7 +4,8 @@ from asyncpg import Record
 
 from src.internal.biz.deserializers.base_constants import ID, CREATED_AT, EDITED_AT
 from src.internal.biz.deserializers.base_deserializer import BaseDeserializer
-from src.internal.biz.deserializers.place_main import PLACE_MAIN, PlaceMainDeserializer, DES_PLACE_MAIN_FROM_DB_FULL
+from src.internal.biz.deserializers.place_main import PLACE_MAIN, PlaceMainDeserializer, DES_PLACE_MAIN_FROM_DB_FULL, \
+    TEMP_GET_NULL_STR, TEMP_GET_NULL_INT
 from src.internal.biz.deserializers.utils import filter_keys_by_substr
 from src.internal.biz.entities.place_location import PlaceLocation
 
@@ -52,6 +53,8 @@ class PlaceLocationDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(place_location: dict) -> PlaceLocation:
+        if place_location == {}:
+            return PlaceLocation(id=TEMP_GET_NULL_INT)
         return PlaceLocation(
             full_address=place_location['full_address'],
             city=place_location['city'],

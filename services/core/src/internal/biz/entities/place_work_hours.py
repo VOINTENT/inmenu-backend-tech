@@ -14,13 +14,15 @@ class PlaceWorkHours(AbstractModel):
                  week_day: Optional[str] = None,
                  time_start: Optional[datetime.time] = None,
                  time_finish: Optional[datetime.time] = None,
-                 is_holiday: Optional[bool] = None) -> None:
+                 is_holiday: Optional[bool] = None,
+                 is_all_day: Optional[bool] = None) -> None:
         super().__init__(id, created_at, edited_at)
         self.__place_main = place_main
         self.__week_day = week_day
         self.__time_start = time_start
         self.__time_finish = time_finish
         self.__is_holiday = is_holiday
+        self.__is_all_day = is_all_day
 
     @property
     def place_main(self):
@@ -50,6 +52,10 @@ class PlaceWorkHours(AbstractModel):
     def is_holiday(self):
         return self.__is_holiday
 
+    @property
+    def is_all_day(self):
+        return self.__is_all_day
+
     @staticmethod
     def _check(**kwargs):
         check_value(kwargs['place_main'], PlaceMain)
@@ -57,3 +63,4 @@ class PlaceWorkHours(AbstractModel):
         check_value(kwargs['time_start'], datetime.time)
         check_value(kwargs['time_finish'], datetime.time)
         check_value(kwargs['is_holiday'], bool)
+        check_value(kwargs['is_all_day'], bool)

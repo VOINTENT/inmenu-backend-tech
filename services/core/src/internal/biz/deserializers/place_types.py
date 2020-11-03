@@ -26,5 +26,4 @@ class PlaceTypesDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(place_types: List[int]) -> List[PlacePlaceType]:
-        print('i Am')
-        return [PlacePlaceType(place_type=PlaceType(id=place_type_id if place_type_id is not None else TEMP_GET_NULL_INT)) for place_type_id in place_types]
+        return [PlacePlaceType(place_type=PlaceType(id=place_type_id)) for place_type_id in place_types]

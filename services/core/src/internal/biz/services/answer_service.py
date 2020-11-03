@@ -148,6 +148,10 @@ class AnswerService(BaseService):
     def get_error_unique_place_service() -> Error:
         return Error(-313, 'Сервисы места уже соответствуют указанным', 400)
 
+    @staticmethod
+    def get_error_unique_cuisine_type() -> Error:
+        return Error(-314, 'Типы кухни уже соответсвуют указанному', 400)
+
 #     ==================================================================================
 #     Internal errors
 

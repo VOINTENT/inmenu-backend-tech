@@ -29,7 +29,6 @@ class PlaceContactsDao(BaseDao):
                 vk_link = CASE WHEN $6::varchar != '-1' THEN $6::varchar WHEN $6::varchar = '-1' THEN NULL::varchar WHEN $6::varchar IS NULL THEN vk_link END
             WHERE place_main_id = $7
         """
-        print(place_contacts.phone_number)
         await self.conn.execute(sql, place_contacts.phone_number if place_contacts.phone_number else None,
                                 place_contacts.email if place_contacts.email else None,
                                 place_contacts.site_link if place_contacts.site_link else None,
@@ -38,3 +37,22 @@ class PlaceContactsDao(BaseDao):
                                 place_contacts.vk_link if place_contacts.vk_link else None,
                                 place_main_id)
         return place_contacts, None
+
+    async def delete(self, place_main_id: int):
+        sql = f"""
+        DELETE FROM place_contacts WHERE place_main_id = {place_main_id}"""
+        await self.conn.execute(sql)
+        return None, None
+
+    async def get_check_by_id(self, place_main_id):
+        sql = f"""
+        SELECT 
+            place_main_id AS place_main_id
+        FROM
+            place_contacts
+        WHERE place_main_id = {place_main_id}
+        """
+        data = await self.conn.fetchval(sql)
+        if not data:
+            return False, None
+        return True, None

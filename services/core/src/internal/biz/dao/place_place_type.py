@@ -9,6 +9,8 @@ from src.internal.biz.deserializers.place_main import TEMP_GET_NULL_INT
 from src.internal.biz.deserializers.place_place_type import PlacePlaceTypeDeserializer, \
     DES_PLACE_PLACE_TYPE_FROM_DB_FULL
 from src.internal.biz.deserializers.place_type_deserializer import PLACE_TYPE_ID, PLACE_TYPE_NAME
+from src.internal.biz.entities.place_common import PlaceCommon
+from src.internal.biz.entities.place_main import PlaceMain
 from src.internal.biz.entities.place_place_type import PlacePlaceType
 
 
@@ -38,6 +40,11 @@ class PlacePlaceTypeDao(BaseDao):
                     return None, ErrorEnum.WRONG_PLACE_TYPE
                 else:
                     raise TypeError
+            except asyncpg.exceptions.UniqueViolationError as exc:
+                if exc.constraint_name == UNIQUE_PLACE_PLACE_TYPE:
+                    return None, ErrorEnum.UNIQUE_PLACE_TYPE
+                else:
+                    raise TypeError
 
         return None, None
 
@@ -57,27 +64,7 @@ class PlacePlaceTypeDao(BaseDao):
 
             return [PlacePlaceTypeDeserializer.deserialize(row, DES_PLACE_PLACE_TYPE_FROM_DB_FULL) for row in rows], None
 
-    async def update_place_types(self, place_main_id: int, place_places_types: List[PlacePlaceType]) -> Tuple[Optional[PlacePlaceType], Optional[Error]]:
-        temp_sql = f"""DELETE FROM place_place_type WHERE place_main_id = {place_main_id};"""
-        sql = """INSERT INTO place_place_type(place_main_id, place_type_id) VALUES"""
-        inserted_values = []
-        for place_place_type, i in list(zip(place_places_types, range(1, len(place_places_types) * 2, 2))):
-            sql += ', ' if len(inserted_values) != 0 else ''
-            sql += f'(${i}, ${i + 1})'
-            inserted_values.append(place_place_type.place_main.id)
-            inserted_values.append(place_place_type.place_type.id if place_place_type.place_type.id != TEMP_GET_NULL_INT else None)
-        print(inserted_values)
-        try:
-            await self.conn.execute(temp_sql)
-            await self.conn.execute(sql, *inserted_values)
-        except asyncpg.exceptions.ForeignKeyViolationError as exc:
-            if exc.constraint_name == PLACE_TYPE_FOREIGN_KEY:
-                return None, ErrorEnum.WRONG_PLACE_TYPE
-            else:
-                raise TypeError
-        except asyncpg.exceptions.UniqueViolationError as exc:
-            if exc.constraint_name == UNIQUE_PLACE_PLACE_TYPE:
-                return None, ErrorEnum.UNIQUE_PLACE_TYPE
-            else:
-                raise TypeError
+    async def delete(self, place_main_id: int):
+        sql = f"""DELETE FROM place_place_type WHERE place_main_id = {place_main_id};"""
+        await self.conn.execute(sql)
         return None, None

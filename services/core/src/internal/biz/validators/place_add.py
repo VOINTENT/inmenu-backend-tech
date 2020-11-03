@@ -33,6 +33,7 @@ class LocationsSchema(Schema):
 
 class WeekDaySchema(Schema):
     is_holiday = fields.Boolean(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
+    is_all_day = fields.Boolean(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
     time_start = fields.Integer(required=False, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
     time_finish = fields.Integer(required=False, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
 
@@ -41,6 +42,11 @@ class WeekDaySchema(Schema):
         if data['is_holiday']:
             if data.get('time_start') or data.get('time_finish'):
                 raise ValidationError([ValidationErrorEnum.WORK_ON_HOLIDAY])
+            if data['is_all_day']:
+                raise ValidationError([ValidationErrorEnum.WORK_IN_HOLIDAY])
+        elif data['is_all_day']:
+            if data.get('time_start') or data.get('time_finish'):
+                raise ValidationError([ValidationErrorEnum.WORK_IS_ALL_DAY])
         else:
             if not data['time_start']:
                 raise ValidationError({'time_start': ValidationErrorEnum.NOT_FIELD})

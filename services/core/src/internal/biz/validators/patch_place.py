@@ -34,8 +34,8 @@ class LocationSchema(Schema):
 class WeekDaySchema(Schema):
     is_holiday = fields.Boolean(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
     is_all_day = fields.Boolean(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
-    time_start = fields.Integer(required=True, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
-    time_finish = fields.Integer(required=True, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
+    time_start = fields.Integer(required=False, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
+    time_finish = fields.Integer(required=False, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
 
     @validates_schema
     def validate_week_day(self, data, **kwargs):
@@ -82,40 +82,3 @@ class PlacePatchSchema(Schema):
     main_currency_id = fields.Integer(required=False, allow_none=True)
     location = fields.Nested(LocationSchema, required=False, allow_none=True)
     contacts = fields.Nested(ContactsSchema, required=False, allow_none=True)
-    # extra = fields.Nested(Extra, required=True, allow_none=False)
-
-    # @validates_schema
-    # def validate_required_params(self, data, **kwargs):
-    #     if not data['extra']['is_draft']:
-    #         if not data.get('main_lang_id'):
-    #             raise ValidationError({'main_lang_id': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('name'):
-    #             raise ValidationError({'name': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('description'):
-    #             raise ValidationError({'description': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('photo_link'):
-    #             raise ValidationError({'photo_link': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('login'):
-    #             raise ValidationError({'login': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('place_types_ids'):
-    #             raise ValidationError({'place_types_ids': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('cuisine_types_ids'):
-    #             raise ValidationError({'cuisine_types_ids': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('services_ids'):
-    #             raise ValidationError({'services_ids': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('work_hours'):
-    #             raise ValidationError({'work_hours': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('main_currency_id'):
-    #             raise ValidationError({'main_currency_id': ValidationErrorEnum.NOT_FIELD})
-    #
-    #         if not data.get('locations'):
-    #             raise ValidationError({'locations': ValidationErrorEnum.NOT_FIELD})
