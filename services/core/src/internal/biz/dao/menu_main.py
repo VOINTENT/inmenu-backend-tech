@@ -40,7 +40,6 @@ class MenuMainDao(BaseDao):
         menu_main.id = menu_id
         return menu_main, None
 
-
     async def get_by_place_main_id(self, place_main_id: int, pagination_size: int, pagination_after: int):
         async with self.pool.acquire() as conn:
             rows = await conn.fetch(f"""

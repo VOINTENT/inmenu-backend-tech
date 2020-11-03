@@ -1,2 +1,3 @@
 INSERT INTO language(name, code_name) VALUES
-('Русский', 'ru');
+('Русский', 'ru'),
+('Английский', 'en')

@@ -2,12 +2,9 @@ from sanic import Blueprint
 from sanic.request import Request
 from sanic.response import json
 
-from src.internal.adapters.entities.error import Error
 from src.internal.adapters.entities.utils import get_response_with_validation_errors
 
 from src.internal.biz.deserializers.menu_main import DES_MENU_ADD, MenuMainDeserializer
-
-from src.internal.servers.http.answers.accounts import get_response_menu_detail
 
 from src.internal.biz.services.menu import MenuService
 from src.internal.biz.validators.menu_add import MenuAddSchema

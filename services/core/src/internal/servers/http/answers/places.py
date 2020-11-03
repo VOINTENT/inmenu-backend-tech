@@ -9,7 +9,7 @@ from src.internal.biz.serializers.place_common import PlaceCommonSerializer, SER
     SER_PLACE_COMMON_GET_PLACES_BY_NAME, SER_PLACE_COMMON_GET_PLACE_LOCATION_PARTIAL_DETAIL
 from src.internal.biz.serializers.place_location import PlaceLocationSerializer, \
     SER_PLACE_LOCATION_GET_LOCATIONS_WITH_PLACES, SER_PLACE_LOCATION_GET_LOCATIONS_ON_MAP
-from src.internal.biz.serializers.place_main import PlaceMainSerializer, SER_PLACE_MAIN_GET_MY
+from src.internal.biz.serializers.place_main import PlaceMainSerializer, SER_PLACE_MAIN_GET_MY, SER_PLACE_MAIN_DEL
 
 
 def get_response_get_places(place_commons: List[PlaceCommon]) -> HTTPResponse:
@@ -34,3 +34,7 @@ def get_response_get_place_location_partial_detail(place_common: PlaceCommon) ->
 
 def get_response_get_my_places(place_mains: List[PlaceMain]) -> HTTPResponse:
     return json([PlaceMainSerializer.serialize(place_main, SER_PLACE_MAIN_GET_MY) for place_main in place_mains], 200)
+
+
+def get_response_del_place(response: bool) -> HTTPResponse:
+    return json(PlaceMainSerializer.serialize(response, SER_PLACE_MAIN_DEL), 200)

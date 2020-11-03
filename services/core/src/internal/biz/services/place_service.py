@@ -2,6 +2,7 @@ from typing import Optional, Tuple, List
 
 from src.internal.adapters.entities.error import Error
 from src.internal.adapters.enums.errors import ErrorEnum
+from src.internal.biz.dao.place_account_role import PlaceAccountRoleDao
 from src.internal.biz.dao.place_common import PlaceCommonDao
 from src.internal.biz.dao.place_cuisine_type_dao import PlaceCuisineTypeDao
 from src.internal.biz.dao.place_location import PlaceLocationDao
@@ -116,3 +117,19 @@ class PlaceService(BaseService):
             return None, err
 
         return place_mains, err
+
+    @staticmethod
+    async def del_place(place_main_id: int) -> Tuple[Optional[bool], Optional[Error]]:
+        response_place_main, err = await PlaceMainDao().del_by_place_main_id(place_main_id)
+        if err:
+            return False, err
+
+        return True, None
+
+    @staticmethod
+    async def update_place(place_main_id: int, place_common: PlaceCommon) -> Tuple[Optional[PlaceCommon], Optional[Error]]:
+        place_common, err = await PlaceCommonDao().update(place_main_id, place_common)
+        if err:
+            return None, err
+
+        return place_common, None

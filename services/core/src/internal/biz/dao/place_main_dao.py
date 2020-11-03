@@ -141,3 +141,56 @@ class PlaceMainDao(BaseDao):
             """, account_main_id, pagination_size, pagination_after)
 
             return [PlaceMainDeserializer.deserialize(row, DES_PLACE_MAIN_FROM_DB_FULL) for row in rows], None
+
+    async def del_by_place_main_id(self, place_main_id: int) -> Tuple[Optional[bool], Optional[Error]]:
+        sql = """
+            DELETE FROM place_main
+            WHERE place_main.id = $1
+            RETURNING place_main.id
+        """
+        try:
+            async with self.pool.acquire() as conn:
+                value = await conn.fetchval(sql, place_main_id)
+        except:
+            raise TypeError
+
+        if not value:
+            return None, ErrorEnum.PLACE_DOESNT_EXISTS
+
+        return True, None
+
+    async def update(self, place_main_id: int, place_main: PlaceMain) -> Tuple[Optional[PlaceMain], Optional[Error]]:
+        sql = """
+            UPDATE
+                place_main
+            SET
+                main_language = CASE WHEN $1::int != -1 THEN $1::int WHEN $1::int = -1 THEN NULL::int WHEN $1::int IS NULL THEN main_language END,
+                name = CASE WHEN $2::varchar != '-1' THEN $2::varchar WHEN $2::varchar = '-1' THEN NULL WHEN $2::varchar IS NULL THEN name END,
+                description = CASE WHEN $3::varchar != '-1' THEN $3::varchar WHEN $3::varchar = '-1' THEN NULL WHEN $3::varchar IS NULL THEN description END,
+                login = CASE WHEN $4::varchar != '-1' THEN $4::varchar WHEN $4::varchar = '-1' THEN NULL WHEN $4::varchar IS NULL THEN login END,
+                photo_link = CASE WHEN $5::varchar != '-1' THEN $5::varchar WHEN $5::varchar = '-1' THEN NULL WHEN $5::varchar IS NULL THEN photo_link END,
+                main_currency_id = CASE WHEN $6::int != -1 THEN $6::int WHEN $6::int = -1 THEN NULL::int WHEN $6::int IS NULL THEN main_currency_id END
+            WHERE place_main.id = $7
+            RETURNING id
+        """
+        try:
+            place_main__id = await self.conn.fetchval(sql, place_main.main_language.id if place_main.main_language else None,
+                                                     place_main.name if place_main.name else None,
+                                                     place_main.description if place_main.description else None,
+                                                     place_main.login if place_main.login else None,
+                                                     place_main.photo.short_url if place_main.photo else None,
+                                                     place_main.main_currency.id if place_main.main_currency else None,
+                                                     place_main_id)
+        except asyncpg.exceptions.UniqueViolationError as exc:
+            if exc.constraint_name == UNIQUE_PLACE_LOGIN:
+                return None, ErrorEnum.NOT_UNIQUE_PLACE_LOGIN
+            else:
+                raise TypeError
+        except asyncpg.exceptions.ForeignKeyViolationError as exc:
+            if exc.constraint_name == LANGUAGE_FOREIGN_KEY:
+                return None, ErrorEnum.WRONG_LANGUAGE
+            else:
+                raise TypeError
+
+        place_main.id = place_main_id
+        return place_main, None

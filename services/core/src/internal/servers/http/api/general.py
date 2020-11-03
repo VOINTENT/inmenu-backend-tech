@@ -11,6 +11,5 @@ from src.internal.servers.http.api.cuisine_type import cuisine_types
 from src.internal.servers.http.api.currency_type import currency_types
 from src.internal.servers.http.api.place_type import place_types
 from src.internal.servers.http.api.service import services
-from src.internal.servers.http.api.work import work_hours
 
-general_api = Blueprint.group(accounts, places, menu, categories, dishes, languages, cuisine_types, currency_types, place_types, services, work_hours, measure_units, url_prefix='/general')
+general_api = Blueprint.group(accounts, places, menu, categories, dishes, languages, cuisine_types, currency_types, place_types, services, measure_units, url_prefix='/general')

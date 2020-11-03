@@ -53,3 +53,27 @@ class PlaceCuisineTypeDao(BaseDao):
 
             rows = await conn.fetch(sql, place_main_ids, lang_id)
             return [PlaceCuisineType(place_main=PlaceMain(id=row['place_main_id']), cuisine_type=CuisineType(id=row['cuisine_type_id'], name=row['name'])) for row in rows], None
+
+    async def update_cuisine_type(self, place_main_id: int, place_cuisine_types: List[PlaceCuisineType]):
+
+        temp_sql = f"""DELETE FROM place_cuisine_type WHERE place_main_id = {place_main_id}"""
+        sql = """INSERT INTO place_cuisine_type(place_main_id, cuisine_type_id) VALUES """
+        inserted_values = []
+        for place_cuisine_type, i in list(zip(place_cuisine_types, range(1, len(place_cuisine_types) * 2, 2))):
+            sql += ', ' if len(inserted_values) != 0 else ''
+            sql += f'(${i}, ${i + 1})'
+            inserted_values.append(place_cuisine_type.place_main.id)
+            inserted_values.append(place_cuisine_type.cuisine_type.id)
+            print(place_cuisine_type.cuisine_type.id)
+            print(place_cuisine_type.place_main.id)
+        print(sql)
+        try:
+            await self.conn.execute(temp_sql)
+            await self.conn.execute(sql, *inserted_values)
+        except asyncpg.exceptions.ForeignKeyViolationError as exc:
+            if exc.constraint_name == CUISINE_TYPE_FOREIGN_TYPE:
+                return None, ErrorEnum.WRONG_CUISINE_TYPE
+            else:
+                raise TypeError
+
+        return None, None
