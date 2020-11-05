@@ -11,7 +11,7 @@ from src.internal.biz.entities.place_location import PlaceLocation
 
 
 DES_PLACE_LOCATION_FROM_DB_FULL = 'place-location-from-db-full'
-DES_PLACE_LOCATIONS_UPDATE = 'place-locations-update'
+DES_PLACE_LOCATION_UPDATE = 'place-locations-update'
 
 PLACE_LOCATION = 'plloc_'
 PLACE_LOCATION_ID = PLACE_LOCATION + ID
@@ -31,7 +31,7 @@ class PlaceLocationDeserializer(BaseDeserializer):
     def _get_deserializer(cls, format_des: str):
         if format_des == DES_PLACE_LOCATION_FROM_DB_FULL:
             return cls._deserialize_from_db_full
-        elif format_des == DES_PLACE_LOCATIONS_UPDATE:
+        elif format_des == DES_PLACE_LOCATION_UPDATE:
             return cls._deserialize_update
         else:
             raise TypeError

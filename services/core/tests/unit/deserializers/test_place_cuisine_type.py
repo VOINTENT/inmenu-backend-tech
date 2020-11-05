@@ -1,4 +1,5 @@
 from src.internal.biz.deserializers.cuisine_types import CuisineTypesDeserializer, DES_CUISINE_TYPES_UPDATE
+from src.internal.biz.deserializers.place_common import PlaceCommonDeserializer, DES_PLACE_COMMON_UPDATE
 from src.internal.biz.deserializers.place_main import TEMP_GET_NULL_INT
 
 
@@ -14,3 +15,8 @@ def test_cuisine_type_deserializer_update():
     place_cuisine_type = CuisineTypesDeserializer.deserialize(data['cuisine_types_ids'], DES_CUISINE_TYPES_UPDATE)
 
     assert place_cuisine_type[0].cuisine_type.id == TEMP_GET_NULL_INT
+
+    data = {}
+    place_places_types = CuisineTypesDeserializer.deserialize(data, DES_CUISINE_TYPES_UPDATE)
+
+    assert place_places_types == []
