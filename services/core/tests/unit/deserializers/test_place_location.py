@@ -1,19 +1,11 @@
+from assets.test_conf import DATA_1_LOCATION, DATA_2_LOCATION
 from src.internal.biz.deserializers.place_common import DES_PLACE_COMMON_UPDATE, PlaceCommonDeserializer
 from src.internal.biz.deserializers.place_location import PlaceLocationDeserializer, DES_PLACE_LOCATION_UPDATE
 from src.internal.biz.deserializers.place_main import TEMP_GET_NULL_INT
 
 
 def test_place_location_deserializer():
-    data_1 = {"location": {
-        "full_address": "Россия, Казань, Астрономическая, 23",
-        "city": "Казань",
-        "country": "Россия",
-        "coords": {
-            "lat": 58.43426432,
-            "long": 58.43426432
-        }
-    }
-    }
+    data_1 = DATA_1_LOCATION
 
     place_location_1 = PlaceLocationDeserializer.deserialize(data_1['location'], DES_PLACE_LOCATION_UPDATE)
 
@@ -23,15 +15,7 @@ def test_place_location_deserializer():
     assert place_location_1.country == data_1['location']['country']
     assert place_location_1.coords == (data_1['location']['coords']['lat'], data_1['location']['coords']['long'])
 
-    data_2 = {"location": {
-        "full_address": "Россия, Казань, Астрономическая, 23",
-        "country": "Россия",
-        "coords": {
-            "lat": 58.43426432,
-            "long": 58.43426432
-        }
-    }
-    }
+    data_2 = DATA_2_LOCATION
 
     try:
         place_location_2 = PlaceLocationDeserializer.deserialize(data_2['location'], DES_PLACE_LOCATION_UPDATE)

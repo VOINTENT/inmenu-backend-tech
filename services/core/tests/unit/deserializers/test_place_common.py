@@ -1,14 +1,10 @@
+from assets.test_conf import DATA_1_CONTACTS, DATA_1_LOCATION, DATA_2_LOCATION, DATA_1_PLACE_MAIN
 from src.internal.biz.deserializers.place_common import PlaceCommonDeserializer, DES_PLACE_COMMON_UPDATE
 from src.internal.biz.deserializers.place_main import TEMP_GET_NULL_INT, TEMP_GET_NULL_STR
 
 
 def test_des_update_place_main():
-    data_1 = {"main_lang_id": 2,
-              "name": "Хинкальная",
-              "description": "Описание",
-              "login": "hinkalka",
-              "photo_link": "tmp/...",
-              "main_currency_id": 2}
+    data_1 = DATA_1_PLACE_MAIN
 
     data_2 = {'main_lang_id': None,
               "name": None,
@@ -46,15 +42,7 @@ def test_des_update_place_main():
 
 
 def test_des_update_place_contacts():
-    data_1 = {'contacts': {
-        "phone_number": "70000000000",
-        "email": "email@mail.ru",
-        "site_link": "http://hinkalka.ru",
-        "facebook_link": "https://facebook.com/hinkalka",
-        "instagram_link": "https://instagram.com/hinkalka",
-        "vk_link": "https://vk.com/hinhalka"
-    }
-    }
+    data_1 = DATA_1_CONTACTS
 
     data_2 = {'contacts': {
         "phone_number": None,
@@ -201,26 +189,9 @@ def test_des_update_place_services():
     assert place_common_5.place_services is None
 
 def test_des_update_place_location():
-    data_1 = {"location": {
-        "full_address": "Россия, Казань, Астрономическая, 23",
-        "city": "Казань",
-        "country": "Россия",
-        "coords": {
-            "lat": 58.43426432,
-            "long": 58.43426432
-        }
-    }
-    }
+    data_1 = DATA_1_LOCATION
 
-    data_2 = {"location": {
-        "full_address": "Россия, Казань, Астрономическая, 23",
-        "country": "Россия",
-        "coords": {
-            "lat": 58.43426432,
-            "long": 58.43426432
-        }
-    }
-    }
+    data_2 = DATA_2_LOCATION
 
     data_3 = {'location': {}}
     data_4 = {'location': None}

@@ -1,14 +1,10 @@
+from assets.test_conf import DATA_1_PLACE_MAIN
 from src.internal.biz.deserializers.place_main import PlaceMainDeserializer, DES_PLACE_MAIN_UPDATE, TEMP_GET_NULL_INT, \
     TEMP_GET_NULL_STR
 
 
 def test_place_main_deserialize_update():
-    data_1 = {"main_lang_id": 2,
-            "name": "Хинкальная",
-            "description": "Описание",
-            "login": "hinkalka",
-            "photo_link": "tmp/...",
-            "main_currency_id": 2}
+    data_1 = DATA_1_PLACE_MAIN
     place_main = PlaceMainDeserializer.deserialize(data_1, DES_PLACE_MAIN_UPDATE)
 
     assert data_1['main_lang_id'] == place_main.main_language.id

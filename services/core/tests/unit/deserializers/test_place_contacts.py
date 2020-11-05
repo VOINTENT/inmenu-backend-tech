@@ -1,17 +1,11 @@
+from assets.test_conf import DATA_1_CONTACTS
 from src.internal.biz.deserializers.place_common import DES_PLACE_COMMON_UPDATE, PlaceCommonDeserializer
 from src.internal.biz.deserializers.place_contacts import PlaceContactsDeserializer, DES_PLACE_CONTACTS_UPDATE
 from src.internal.biz.deserializers.place_main import TEMP_GET_NULL_STR, TEMP_GET_NULL_INT
 
 
 def test_place_contacts_update():
-    data_1 = {
-        "phone_number": "70000000000",
-        "email": "email@mail.ru",
-        "site_link": "http://hinkalka.ru",
-        "facebook_link": "https://facebook.com/hinkalka",
-        "instagram_link": "https://instagram.com/hinkalka",
-        "vk_link": "https://vk.com/hinhalka"
-    }
+    data_1 = DATA_1_CONTACTS
     place_contacts = PlaceContactsDeserializer.deserialize(data_1, DES_PLACE_CONTACTS_UPDATE)
 
     assert place_contacts.phone_number == data_1['phone_number']
