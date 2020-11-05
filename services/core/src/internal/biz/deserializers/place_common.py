@@ -8,7 +8,7 @@ from src.internal.biz.deserializers.cuisine_types import CuisineTypesDeserialize
 from src.internal.biz.deserializers.place_contacts import PlaceContactsDeserializer, PLACE_CONTACTS, \
     DES_PLACE_CONTACTS_FROM_DB_FULL, DES_PLACE_CONTACTS_UPDATE
 from src.internal.biz.deserializers.place_location import PlaceLocationDeserializer, PLACE_LOCATION, \
-    DES_PLACE_LOCATION_FROM_DB_FULL, DES_PLACE_LOCATIONS_UPDATE
+    DES_PLACE_LOCATION_FROM_DB_FULL, DES_PLACE_LOCATION_UPDATE
 from src.internal.biz.deserializers.place_locations import PlaceLocationsDeserializer, DES_PLACE_LOCATIONS_ADD
 from src.internal.biz.deserializers.place_main import PlaceMainDeserializer, DES_PLACE_MAIN_ADD, PLACE_MAIN, \
     DES_PLACE_MAIN_FROM_DB_FULL, DES_PLACE_MAIN_UPDATE, TEMP_GET_NULL_INT
@@ -71,6 +71,6 @@ class PlaceCommonDeserializer(BaseDeserializer):
             place_cuisine_types=(CuisineTypesDeserializer.deserialize(place_common['cuisine_types_ids'] if place_common.get('cuisine_types_ids') else [TEMP_GET_NULL_INT], DES_CUISINE_TYPES_UPDATE)) if 'cuisine_types_ids' in place_common.keys() else None,
             place_places_types=(PlaceTypesDeserializer.deserialize(place_common['place_types_ids'] if place_common.get('place_types_ids') else [TEMP_GET_NULL_INT], DES_PLACE_TYPES_UPDATE)) if 'place_types_ids' in place_common.keys() else None,
             place_services=(ServicesDeserializer.deserialize(place_common['services_ids'] if place_common.get('services_ids') else [TEMP_GET_NULL_INT], DES_SERVICES_UPDATE)) if 'services_ids' in place_common.keys() else None,
-            place_location=(PlaceLocationDeserializer.deserialize(place_common['location'] if place_common.get('location') else {}, DES_PLACE_LOCATIONS_UPDATE)) if 'location' in place_common.keys() else None,
+            place_location=(PlaceLocationDeserializer.deserialize(place_common['location'] if place_common.get('location') else {}, DES_PLACE_LOCATION_UPDATE)) if 'location' in place_common.keys() else None,
             place_work_hours=(PlaceWorkHoursWeekDeserializer.deserialize(place_common['work_hours'] if place_common.get('work_hours') else {}, DES_WORK_HOURS_WEEK_UPDATE)) if 'work_hours' in place_common.keys() else None,
         )

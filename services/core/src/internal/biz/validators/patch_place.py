@@ -34,8 +34,8 @@ class LocationSchema(Schema):
 class WeekDaySchema(Schema):
     is_holiday = fields.Boolean(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
     is_all_day = fields.Boolean(required=True, allow_none=False, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
-    time_start = fields.Integer(required=False, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
-    time_finish = fields.Integer(required=False, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
+    time_start = fields.Integer(required=True, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
+    time_finish = fields.Integer(required=True, allow_none=True, error_messages={'required': ValidationErrorEnum.NOT_FIELD})
 
     @validates_schema
     def validate_week_day(self, data, **kwargs):
@@ -63,10 +63,6 @@ class WorkHoursSchema(Schema):
     fr = fields.Dict(fields.String, required=True, allow_none=False, validate=lambda value: WeekDaySchema().load(value), error_messages={'required': ValidationErrorEnum.NOT_FIELD})
     sa = fields.Dict(fields.String, required=True, allow_none=False, validate=lambda value: WeekDaySchema().load(value), error_messages={'required': ValidationErrorEnum.NOT_FIELD})
     su = fields.Dict(fields.String, required=True, allow_none=False, validate=lambda value: WeekDaySchema().load(value), error_messages={'required': ValidationErrorEnum.NOT_FIELD})
-
-
-class Extra(Schema):
-    is_draft = fields.Boolean(required=True, allow_none=False)
 
 
 class PlacePatchSchema(Schema):
