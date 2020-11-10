@@ -83,7 +83,7 @@ class PlaceMainDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserializer_update(place_main: dict) -> PlaceMain:
-        place_main_1 = PlaceMain(
+        return PlaceMain(
             main_language=Language(id=place_main['main_lang_id'] if place_main.get('main_lang_id') is not None else TEMP_GET_NULL_INT) if 'main_lang_id' in place_main.keys() else None,
             name=(place_main['name'] if place_main.get('name') is not None else TEMP_GET_NULL_STR) if 'name' in place_main.keys() else None,
             login=(place_main['login'] if place_main.get('login') is not None else TEMP_GET_NULL_STR) if 'login' in place_main.keys() else None,
@@ -91,4 +91,3 @@ class PlaceMainDeserializer(BaseDeserializer):
             description=(place_main['description'] if place_main.get('description') is not None else TEMP_GET_NULL_STR) if 'description' in place_main.keys() else None,
             main_currency=Currency(id=place_main['main_currency_id'] if place_main.get('main_currency_id') is not None else TEMP_GET_NULL_INT) if 'main_currency_id' in place_main.keys() else None
         )
-        return place_main_1

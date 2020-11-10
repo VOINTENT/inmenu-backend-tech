@@ -154,4 +154,4 @@ async def update_my_place(request: Request, place_main_id: int, auth_account_mai
     if err:
         return err.get_response_with_error()
 
-    return json({'id': place_common.place_main.id})
+    return json({'Status': True, 'id': place_common.place_main.id})

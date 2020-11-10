@@ -23,6 +23,7 @@ class PlaceWorkHoursDeserializer(BaseDeserializer):
     def _deserialize_add(work_hours: Dict[str, Any]) -> PlaceWorkHours:
         return PlaceWorkHours(
             is_holiday=work_hours['is_holiday'],
+            is_all_day=work_hours['is_all_day'],
             time_start=datetime.time(hour=work_hours['time_start'] // 3600, minute=work_hours['time_start'] % 3600 // 60) if work_hours.get('time_start') else None,
             time_finish=datetime.time(hour=work_hours['time_finish'] // 3600, minute=work_hours['time_finish'] % 3600 // 60) if work_hours.get('time_finish') else None,
         )
@@ -31,6 +32,7 @@ class PlaceWorkHoursDeserializer(BaseDeserializer):
     def _deserialize_update(work_hours: Dict[str, Any]) -> PlaceWorkHours:
         return PlaceWorkHours(
             is_holiday=work_hours['is_holiday'],
+            is_all_day=work_hours['is_all_day'],
             time_start=datetime.time(hour=work_hours['time_start'] // 3600, minute=work_hours['time_start'] % 3600 // 60) if work_hours.get('time_start') else None,
             time_finish=datetime.time(hour=work_hours['time_finish'] // 3600, minute=work_hours['time_finish'] % 3600 // 60) if work_hours.get('time_finish') else None
         )

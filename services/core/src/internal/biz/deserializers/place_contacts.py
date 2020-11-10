@@ -5,7 +5,7 @@ from asyncpg import Record
 from src.internal.biz.deserializers.base_constants import ID, CREATED_AT, EDITED_AT
 from src.internal.biz.deserializers.base_deserializer import BaseDeserializer, DES_FROM_DICT
 from src.internal.biz.deserializers.place_main import PLACE_MAIN, PlaceMainDeserializer, DES_PLACE_MAIN_FROM_DB_FULL, \
-    TEMP_GET_NULL_STR
+    TEMP_GET_NULL_STR, TEMP_GET_NULL_INT
 from src.internal.biz.deserializers.utils import filter_keys_by_substr
 from src.internal.biz.entities.place_contacts import PlaceContacts
 
@@ -69,6 +69,8 @@ class PlaceContactsDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(place_contacts: dict) -> PlaceContacts:
+        if not place_contacts:
+            return PlaceContacts(id=TEMP_GET_NULL_INT)
         return PlaceContacts(
             phone_number=(place_contacts['phone_number'] if place_contacts['phone_number'] is not None else TEMP_GET_NULL_STR) if 'phone_number' in place_contacts.keys() else None,
             email=(place_contacts['email'] if place_contacts.get('email') is not None else TEMP_GET_NULL_STR) if 'email' in place_contacts.keys() else None,

@@ -1,6 +1,7 @@
 from typing import Dict, List
 
 from src.internal.biz.deserializers.base_deserializer import BaseDeserializer
+from src.internal.biz.deserializers.place_main import TEMP_GET_NULL_INT
 from src.internal.biz.deserializers.place_work_hours import PlaceWorkHoursDeserializer, DES_WORK_HOURS_ADD, \
     DES_WORK_HOURS_UPDATE
 from src.internal.biz.entities.place_work_hours import PlaceWorkHours
@@ -32,6 +33,8 @@ class PlaceWorkHoursWeekDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(work_hours: dict) -> List[PlaceWorkHours]:
+        if not work_hours:
+            return [PlaceWorkHours(id=TEMP_GET_NULL_INT)]
         place_work_hours_week = []
         for week_day, work_hours_day in work_hours.items():
             place_work_hours = PlaceWorkHoursDeserializer.deserialize(work_hours_day, DES_WORK_HOURS_UPDATE)

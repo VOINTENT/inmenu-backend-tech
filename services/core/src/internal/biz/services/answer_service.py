@@ -32,7 +32,7 @@ class AnswerService(BaseService):
 
     @staticmethod
     def get_error_work_on_holiday():
-        return ValidationError(-107, 'В выходной день не может быть указано время работы', 400)
+        return ValidationError(-107, 'В выходной день не может быть указано время работы: ', 400)
 
     @staticmethod
     def get_wrong_phone_number_format():
@@ -44,11 +44,11 @@ class AnswerService(BaseService):
 
     @staticmethod
     def get_error_work_in_holiday():
-        return ValidationError(-110, 'В выходной день не может быть указан полный день работы', 400)
+        return ValidationError(-110, 'В выходной день не может быть указан полный день работы: ', 400)
 
     @staticmethod
     def get_error_work_is_all_day():
-        return ValidationError(-111, 'В полный день работы не может быть указано время работы', 400)
+        return ValidationError(-111, 'В полный день работы не может быть указано время работы: ', 400)
 
 #     ==================================================================================
 #     Auth errors
@@ -147,6 +147,10 @@ class AnswerService(BaseService):
     @staticmethod
     def get_error_unique_place_service() -> Error:
         return Error(-313, 'Сервисы места уже соответствуют указанным', 400)
+
+    @staticmethod
+    def get_error_unique_cuisine_type() -> Error:
+        return Error(-314, 'Типы кухни уже соответсвуют указанному', 400)
 
 #     ==================================================================================
 #     Internal errors
