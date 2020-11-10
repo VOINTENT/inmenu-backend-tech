@@ -69,7 +69,7 @@ class PlaceContactsDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(place_contacts: dict) -> PlaceContacts:
-        if place_contacts == {}:
+        if not place_contacts:
             return PlaceContacts(id=TEMP_GET_NULL_INT)
         return PlaceContacts(
             phone_number=(place_contacts['phone_number'] if place_contacts['phone_number'] is not None else TEMP_GET_NULL_STR) if 'phone_number' in place_contacts.keys() else None,

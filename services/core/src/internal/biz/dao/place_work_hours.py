@@ -34,6 +34,6 @@ class PlaceWorkHoursDao(BaseDao):
         return None, None
 
     async def delete(self, place_main_id):
-        sql = f"""DELETE FROM place_work_hours WHERE place_main_id = {place_main_id}"""
-        await self.conn.execute(sql)
+        sql = """DELETE FROM place_work_hours WHERE place_main_id = $1"""
+        await self.conn.execute(sql, place_main_id)
         return None, None

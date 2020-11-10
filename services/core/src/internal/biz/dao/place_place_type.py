@@ -65,6 +65,6 @@ class PlacePlaceTypeDao(BaseDao):
             return [PlacePlaceTypeDeserializer.deserialize(row, DES_PLACE_PLACE_TYPE_FROM_DB_FULL) for row in rows], None
 
     async def delete(self, place_main_id: int):
-        sql = f"""DELETE FROM place_place_type WHERE place_main_id = {place_main_id};"""
-        await self.conn.execute(sql)
+        sql = f"""DELETE FROM place_place_type WHERE place_main_id = $1"""
+        await self.conn.execute(sql, place_main_id)
         return None, None

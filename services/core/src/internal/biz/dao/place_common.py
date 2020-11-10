@@ -167,12 +167,16 @@ class PlaceCommonDao(BaseDao):
                     place_place_type_dao = PlacePlaceTypeDao(conn)
                     if place_common.place_places_types[0].place_type.id == TEMP_GET_NULL_INT:
                         _, err = await place_place_type_dao.delete(place_main_id)
+                        if err:
+                            return None, err
                     else:
                         _, err = await place_place_type_dao.delete(place_common.place_places_types[0].place_main.id)
+                        if err:
+                            return None, err
 
                         _, err = await place_place_type_dao.add_many(place_common.place_places_types)
-                    if err:
-                        return None, err
+                        if err:
+                            return None, err
 
                 if place_common.place_services:
                     for place_service in place_common.place_services:
@@ -180,12 +184,16 @@ class PlaceCommonDao(BaseDao):
                     place_service_dao = PlaceServiceDao(conn)
                     if place_common.place_services[0].service.id == TEMP_GET_NULL_INT:
                         _, err = await place_service_dao.delete(place_common.place_services[0].place_main.id)
+                        if err:
+                            return None, err
                     else:
                         _, err = await place_service_dao.delete(place_common.place_services[0].place_main.id)
+                        if err:
+                            return None, err
 
                         _, err = await place_service_dao.add_many(place_common.place_services)
-                    if err:
-                        return None, err
+                        if err:
+                            return None, err
 
                 if place_common.place_cuisine_types:
                     for place_cuisine_type in place_common.place_cuisine_types:
@@ -195,12 +203,15 @@ class PlaceCommonDao(BaseDao):
 
                     if place_common.place_cuisine_types[0].cuisine_type.id == TEMP_GET_NULL_INT:
                         _, err = await place_cuisine_type_dao.delete(place_common.place_cuisine_types[0].place_main.id)
+                        if err:
+                            return None, err
                     else:
                         _, err = await place_cuisine_type_dao.delete(place_common.place_cuisine_types[0].place_main.id)
-
+                        if err:
+                            return None, err
                         _, err = await place_cuisine_type_dao.add_many(place_common.place_cuisine_types)
-                    if err:
-                        return None, err
+                        if err:
+                            return None, err
 
                 if place_common.place_work_hours:
                     for place_work_hours_day in place_common.place_work_hours:
@@ -208,38 +219,41 @@ class PlaceCommonDao(BaseDao):
                     place_work_hours_dao = PlaceWorkHoursDao(conn)
                     if place_common.place_work_hours[0].id == TEMP_GET_NULL_INT:
                         _, err = await place_work_hours_dao.delete(place_common.place_work_hours[0].place_main.id)
+                        if err:
+                            return None, err
                     else:
                         _, err = await place_work_hours_dao.delete(place_common.place_work_hours[0].place_main.id)
-
+                        if err:
+                            return None, err
                         _, err = await place_work_hours_dao.add_many(place_common.place_work_hours)
-                    if err:
-                        return None, err
+                        if err:
+                            return None, err
 
                 if place_common.place_location:
                     place_common.place_location.place_main = place_main
                     place_location_dao = PlaceLocationDao(conn)
                     if place_common.place_location.id == TEMP_GET_NULL_INT:
                         _, err = await place_location_dao.delete(place_common.place_location.place_main.id)
+                        if err:
+                            return None, err
                     else:
                         _, err = await place_location_dao.delete(place_common.place_location.place_main.id)
+                        if err:
+                            return None, err
                         _, err = await place_location_dao.add_many(place_locations=[place_common.place_location])
-                    if err:
-                        return None, err
+                        if err:
+                            return None, err
 
                 if place_common.place_contacts:
                     place_common.place_contacts.place_main = place_main
                     place_contacts_dao = PlaceContactsDao(conn)
                     if place_common.place_contacts.id == TEMP_GET_NULL_INT:
                         _, err = await place_contacts_dao.delete(place_common.place_contacts.place_main.id)
+                        if err:
+                            return None, err
                     else:
-                        val, err = await place_contacts_dao.get_check_by_id(place_common.place_contacts.place_main.id)
-                        if val:
-                            _, err = await place_contacts_dao.update(place_common.place_contacts.place_main.id, place_common.place_contacts)
-                            if err:
-                                return None, err
-                        else:
-                            _, err = await place_contacts_dao.add(place_common.place_contacts)
-                            if err:
-                                return None, err
+                        _, err = await place_contacts_dao.update(place_common.place_contacts.place_main.id, place_common.place_contacts)
+                        if err:
+                            return None, err
 
                 return place_common, None

@@ -53,7 +53,7 @@ class PlaceLocationDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(place_location: dict) -> PlaceLocation:
-        if place_location == {}:
+        if not place_location:
             return PlaceLocation(id=TEMP_GET_NULL_INT)
         return PlaceLocation(
             full_address=place_location['full_address'],

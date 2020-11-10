@@ -33,7 +33,7 @@ class PlaceWorkHoursWeekDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(work_hours: dict) -> List[PlaceWorkHours]:
-        if work_hours == {}:
+        if not work_hours:
             return [PlaceWorkHours(id=TEMP_GET_NULL_INT)]
         place_work_hours_week = []
         for week_day, work_hours_day in work_hours.items():

@@ -59,6 +59,6 @@ class PlaceCuisineTypeDao(BaseDao):
             return [PlaceCuisineType(place_main=PlaceMain(id=row['place_main_id']), cuisine_type=CuisineType(id=row['cuisine_type_id'], name=row['name'])) for row in rows], None
 
     async def delete(self, place_main_id):
-        sql = f"""DELETE FROM place_cuisine_type WHERE place_main_id = {place_main_id}"""
-        await self.conn.execute(sql)
+        sql = """DELETE FROM place_cuisine_type WHERE place_main_id = $1"""
+        await self.conn.execute(sql, place_main_id)
         return None, None

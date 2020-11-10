@@ -39,20 +39,6 @@ class PlaceContactsDao(BaseDao):
         return place_contacts, None
 
     async def delete(self, place_main_id: int):
-        sql = f"""
-        DELETE FROM place_contacts WHERE place_main_id = {place_main_id}"""
-        await self.conn.execute(sql)
+        sql = """DELETE FROM place_contacts WHERE place_main_id = $1"""
+        await self.conn.execute(sql, place_main_id)
         return None, None
-
-    async def get_check_by_id(self, place_main_id):
-        sql = f"""
-        SELECT 
-            place_main_id AS place_main_id
-        FROM
-            place_contacts
-        WHERE place_main_id = {place_main_id}
-        """
-        data = await self.conn.fetchval(sql)
-        if not data:
-            return False, None
-        return True, None

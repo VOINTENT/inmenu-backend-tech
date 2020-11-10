@@ -62,6 +62,6 @@ class PlaceServiceDao(BaseDao):
             return [PlaceServiceDeserializer.deserialize(row, DES_PLACE_SERVICE_FROM_DB_FULL) for row in rows], None
 
     async def delete(self, place_main_id):
-        temp_sql = f'DELETE FROM place_service WHERE place_main_id = {place_main_id}; '
-        await self.conn.execute(temp_sql)
+        sql = """DELETE FROM place_service WHERE place_main_id = $1"""
+        await self.conn.execute(sql, place_main_id)
         return None, None

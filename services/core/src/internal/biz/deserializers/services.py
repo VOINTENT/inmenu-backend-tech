@@ -26,4 +26,4 @@ class ServicesDeserializer(BaseDeserializer):
 
     @staticmethod
     def _deserialize_update(services: List[int]) -> List[PlaceService]:
-        return [PlaceService(service=Service(id=service_type_id if service_type_id is not None else TEMP_GET_NULL_INT)) for service_type_id in services]
+        return [PlaceService(service=Service(id=service_type_id)) for service_type_id in services]
